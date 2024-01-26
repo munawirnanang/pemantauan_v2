@@ -15,6 +15,10 @@
     <!-- date range picker -->
     <link href="<?= base_url('assets') ?>/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
+    <!-- Jquery filer css -->
+    <link href="<?= base_url('assets') ?>/plugins/jquery.filer/css/jquery.filer.css" rel="stylesheet" />
+    <link href="<?= base_url('assets') ?>/plugins/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
+
     <!-- App css -->
     <link href="<?= base_url('assets') ?>/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/core.css" rel="stylesheet" type="text/css" />

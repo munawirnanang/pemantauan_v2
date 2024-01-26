@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Beranda extends CI_Controller
+class C_uploadIndikator extends CI_Controller
 {
 
     /**
@@ -21,11 +21,11 @@ class Beranda extends CI_Controller
      */
     public function index()
     {
-        $this->load->view('admin/inc/header');
-        $this->load->view('admin/inc/topbar');
-        $this->load->view('admin/inc/leftside');
-        $this->load->view('admin/main/beranda');
-        $this->load->view('admin/inc/rightside');
-        $this->load->view('admin/inc/footer');
+        $this->load->view('admin/inc/v_header');
+        $this->load->view('admin/inc/v_topbar');
+        $this->load->view('admin/inc/v_leftside');
+        $this->load->view('admin/main/v_uploadIndikator');
+        $this->load->view('admin/inc/v_rightside');
+        $this->load->view('admin/inc/v_footer');
     }
 }

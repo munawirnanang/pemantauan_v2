@@ -29,6 +29,12 @@
 <script src="<?= base_url('assets') ?>/plugins/moment/moment.js"></script>
 <script src="<?= base_url('assets') ?>/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
 
+<!-- page specific js -->
+<script src="<?= base_url('assets') ?>/assets/pages/jquery.fileuploads.init.js"></script>
+
+<!-- Jquery filer js -->
+<script src="<?= base_url('assets') ?>/plugins/jquery.filer/js/jquery.filer.min.js"></script>
+
 
 <!-- Dashboard init -->
 <script src="<?= base_url('assets') ?>/assets/pages/jquery.dashboard_2.js"></script>

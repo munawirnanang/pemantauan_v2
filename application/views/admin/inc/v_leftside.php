@@ -12,7 +12,7 @@
                 <li class="menu-title">Navigasi</li>
 
                 <li>
-                    <a href="calendar.html" class="waves-effect"><i class="fa fa-dashboard"></i><span> Beranda </span></a>
+                    <a href="<?= base_url('beranda'); ?>" class="waves-effect"><i class="fa fa-dashboard"></i><span> Beranda </span></a>
                 </li>
 
                 <li class="has_sub">
@@ -28,8 +28,8 @@
                 <li class="has_sub">
                     <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-database"></i> <span> Manajemen Data </span> <span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
-                        <li><a href="maps-google.html">Data Indikator</a></li>
-                        <li><a href="maps-vector.html">Data APBD</a></li>
+                        <li><a href="<?= base_url('upload_indikator'); ?>">Upload Data Indikator</a></li>
+                        <li><a href="maps-vector.html">Upload Data APBD</a></li>
                     </ul>
                 </li>
 

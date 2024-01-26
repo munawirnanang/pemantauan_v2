@@ -50,6 +50,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 // $route['default_controller'] = 'welcome';
-$route['default_controller'] = 'beranda';
+$route['default_controller'] = 'C_beranda/index';
+$route['beranda'] = 'C_beranda/index';
+$route['upload_indikator'] = 'C_uploadIndikator/index';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
