@@ -1,6 +1,9 @@
 <script>
     var resizefunc = [];
 </script>
+<script>
+    var base_url = "<?php echo base_url(); ?>";
+</script>
 
 <!-- jQuery  -->
 <script src="<?= base_url('assets') ?>/assets/js/jquery.min.js"></script>
@@ -36,12 +39,30 @@
 <script src="<?= base_url('assets') ?>/plugins/jquery.filer/js/jquery.filer.min.js"></script>
 
 
+<script src=<?= empty($js) ? '' : base_url($js) ?>></script>
+
+
+<!-- bootstrap select -->
+<script src="<?= base_url('assets') ?>/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+<script src="<?= base_url('assets') ?>/plugins/multiselect/js/jquery.multi-select.js"></script>
+
+
 <!-- Dashboard init -->
 <script src="<?= base_url('assets') ?>/assets/pages/jquery.dashboard_2.js"></script>
 
 <!-- App js -->
 <script src="<?= base_url('assets') ?>/assets/js/jquery.core.js"></script>
 <script src="<?= base_url('assets') ?>/assets/js/jquery.app.js"></script>
+<!-- Toastr js -->
+<script src="<?= base_url('assets') ?>/plugins/toastr/toastr.min.js"></script>
+
+<!-- Sweet-Alert  -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="<?= base_url('assets') ?>/plugins/sweetalert2/dist/sweetalert2.js"></script>
+<!-- <script src="<?= base_url('assets') ?>/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script> -->
+
+<script src="<?= base_url() ?>/assets/assets/js/js/swal.js"></script>
 
 <script>
     $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
