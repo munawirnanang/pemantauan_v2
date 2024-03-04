@@ -19,10 +19,19 @@ class C_uploadIndikator extends CI_Controller
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/userguide3/general/urls.html
      */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+        if (!$this->session->userdata('userid')) {
+            redirect('');
+        }
+    }
+
     public function index()
     {
         $this->load->view('admin/inc/v_header');
-        $this->load->view('admin/inc/v_topbar');
+        $this->load->view('admin/inc/v_topbar_v2');
         $this->load->view('admin/inc/v_leftside');
         $this->load->view('admin/main/v_uploadIndikator');
         $this->load->view('admin/inc/v_rightside');

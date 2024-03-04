@@ -19,6 +19,14 @@ class C_beranda extends CI_Controller
      * map to /index.php/welcome/<method_name>
      * @see https://codeigniter.com/userguide3/general/urls.html
      */
+    public function __construct()
+    {
+        parent::__construct();
+		$this->load->library('form_validation');
+        if (!$this->session->userdata('userid')) {
+            redirect('');
+        }
+    }
     public function index()
     {
         $this->load->view('admin/inc/v_header');

@@ -1,37 +1,15 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="content-page">
+<div class="content-page" style="margin-top: 20px;">
     <!-- Start content -->
     <div class="content">
-        <div class="container">
+        <div class="container" style="width: 93%;">
 
 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="page-title-box">
-                        <h4 class="page-title">File Uploads </h4>
-                        <ol class="breadcrumb p-0 m-0">
-                            <li>
-                                <a href="#">Zircos</a>
-                            </li>
-                            <li>
-                                <a href="#">Forms </a>
-                            </li>
-                            <li class="active">
-                                File Uploads
-                            </li>
-                        </ol>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-
-
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="card-box">
+                    <div class="card-box" style="border: 1px solid black; border-radius: 25px;">
 
                         <div class="row">
                             <div class="col-sm-12 col-xs-12">
