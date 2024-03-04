@@ -28,8 +28,8 @@ $(document).ready(function() {
       text: "Data "+namaHapus+" akan dihapus",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Ya, Hapus",
-      cancelButtonText: "Tidak, Batal",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Tidak",
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
@@ -55,4 +55,34 @@ $(document).ready(function() {
       });
     });
 });
+
+
+// $(document).ready(function() {
+//   $(document).on('click', '#hapus', function() {
+//     var namaHapus = $(this).attr('nama-hapus');
+//     var id = $(this).attr('id-hapus');
+//     var controller = $(this).attr('action');
+    
+//     //Warning Message
+//     swal({
+//       title: "Are you sure?",
+//       text: "You will not be able to recover this data!",
+//       type: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#DD6B55",
+//       confirmButtonText: "Yes, delete it!",
+//       cancelButtonText: "No, cancel plx!",
+//       closeOnConfirm: false,
+//       closeOnCancel: false
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             swal("Deleted!", "Your imaginary data has been deleted.", "success");
+//             window.location.href = delete_url;
+//         } else {
+//             swal("Cancelled", "Your imaginary data is safe :)", "error");
+//         }
+//     });
+
+//   });
+// });
     

@@ -6,7 +6,7 @@ class C_indikator extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-		$this->load->library('form_validation');
+        $this->load->library('form_validation');
         $this->load->library('curl');
         if (!$this->session->userdata('userid')) {
             redirect('');
@@ -19,8 +19,8 @@ class C_indikator extends CI_Controller
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
         // tpt = '543'
         $indikator = '543';
-        $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$indikator.'/key/'.$keyapi;
-       
+        $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/' . $indikator . '/key/' . $keyapi;
+
         $this->curl->create($url);
         $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
         $api = $this->curl->execute();
@@ -39,7 +39,7 @@ class C_indikator extends CI_Controller
         //         for ($k = 0; $k < $tahun; $k++) {
         //             for ($l = 0; $l < $periode; $l++) {
         //                 $id_data = $response['vervar'][$i]['val'] . $idvariabel . $response['turvar'][$j]['val'] . $response['tahun'][$k]['val'] . $response['turtahun'][$l]['val'];
-        
+
         //                 $push = [
         //                     'wilayah' => $response['vervar'][$i]['val'],
         //                     'api_id' => $idvariabel,
@@ -59,13 +59,12 @@ class C_indikator extends CI_Controller
         //         }
         //     }
         // }
-        
-        $this->load->view('admin/inc/v_header',$data);
+
+        $this->load->view('admin/inc/v_header', $data);
         $this->load->view('admin/inc/v_topbar');
         $this->load->view('admin/inc/v_leftside');
         $this->load->view('admin/main/v_table');
         $this->load->view('admin/inc/v_rightside');
         $this->load->view('admin/inc/v_footer');
     }
-    
 }

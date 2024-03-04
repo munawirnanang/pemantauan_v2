@@ -9,6 +9,18 @@
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <ul>
+
+                <li class="has_sub" style="background-color: #191e27;">
+                    <a href="javascript:void(0);" class="waves-effect">
+                        <i><img src="<?= base_url('assets') ?>/images/img-profil.jpg" alt="user-img" class="img-circle user-img" width="20" height="20"></i>
+                        <span> Muhamad Muna.. </span> <span class="menu-arrow"></span>
+                    </a>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Change Password</a></li>
+                        <li><a href="#">Logout</a></li>
+                    </ul>
+                </li>
+
                 <li class="menu-title">Navigasi</li>
 
                 <li>
