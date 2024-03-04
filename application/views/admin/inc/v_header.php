@@ -9,7 +9,7 @@
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="<?= base_url('assets') ?>/assets/images/favicon.ico">
-    <!-- App title -->
+    <!-- App titlee -->
     <title>Dashboard Pemantauan - Direktorat PEPPD</title>
 
     <!-- date range picker -->

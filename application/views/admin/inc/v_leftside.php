@@ -2,7 +2,7 @@
 <!-- Start Leftside content here -->
 <!-- ============================================================== -->
 
-<!-- ========== Left Sidebar Start ========== -->
+<!-- ========== Left Sidebar Startt ========== -->
 <div class="left side-menu">
     <div class="sidebar-inner slimscrollleft">
 

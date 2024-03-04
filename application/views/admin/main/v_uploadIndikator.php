@@ -13,7 +13,7 @@
                         <h5 style="border: 1px solid black; border-radius: 25px; padding: 10px; padding-left: 15px; padding-right: 15px;">Upload Data Indikator </h5>
                         <ol class="breadcrumb p-0 m-0" style="align-self: center;">
                             <li>
-                                Manajemen Dataa
+                                Manajemen Data
                             </li>
                             <li class="active">
                                 <a href="#">Upload Data Indikator</a>

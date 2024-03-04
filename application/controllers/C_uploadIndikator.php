@@ -8,7 +8,7 @@ class C_uploadIndikator extends CI_Controller
      * Index Page for this controller.
      *
      * Maps to the following URL
-     * 		http://example.com/index.php/welcome
+     * 		http://example.com/index.php/welcomee
      *	- or -
      * 		http://example.com/index.php/welcome/index
      *	- or -
