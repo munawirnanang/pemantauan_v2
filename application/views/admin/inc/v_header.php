@@ -29,6 +29,33 @@
     <link href="<?= base_url('assets') ?>/assets/css/responsive.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="<?= base_url('assets') ?>/plugins/switchery/switchery.min.css">
 
+    <!-- bootstrap-select -->
+    <link href="<?= base_url('assets') ?>/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+
+    <link href="<?= base_url('assets') ?>/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+
+    <!-- DataTables -->
+    <link href="<?= base_url('assets') ?>/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Sweet Alert -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet"> -->
+    <link href="<?= base_url('assets') ?>/plugins/sweetalert2/src/sweetalert2.scss" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/plugins/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css" />
+
+    <!-- Sweet Alert -->
+    <!-- <link href="<?= base_url('assets') ?>/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css"> -->
+
+
+    <!-- Notification css (Toastr) -->
+    <link href="<?= base_url('assets') ?>/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+
     <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -36,6 +63,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
 
+
+    <style>
+        .selectcustom>button {
+            border-radius: 25px;
+        }
+    </style>
+
+    <script>
+        var base_url = "<?php echo base_url(); ?>";
+    </script>
     <script src="<?= base_url('assets') ?>/assets/js/modernizr.min.js"></script>
 
 </head>
