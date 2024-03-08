@@ -26,7 +26,7 @@ class c_user extends CI_Controller
     public function index()
     {
         
-
+        $data['judul'] = 'User';
         $data['js']= 'assets/assets/js/js/user.js';
 
         $data['user']= $this->db->query("SELECT * FROM user")->result_array();

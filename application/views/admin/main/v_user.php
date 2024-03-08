@@ -22,9 +22,9 @@
                 <div class="col-sm-12">
                     <div class="flash-data" data-flashdata="<?= $this->session->flashdata('flash')?>"></div>
                     <div class="card-box table-responsive">
-                        <h4 class="m-t-0 header-title m-b-15"><b>Manajemen Data Pengguna</b></h4>
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-primary btn-rounded width-md waves-effect waves-light m-r-5 m-b-15" data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-user-plus"></i> Tambah Data Pengguna</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 class="m-t-0 header-title m-b-15"><b>Manajemen Data User</b></h4>
+                            <button type="button" class="btn btn-primary waves-effect waves-light m-b-15" style="border-radius: 0px;" data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-user-plus"></i> Tambah Data User</button>
                         </div>
                         
                         <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
@@ -35,6 +35,7 @@
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                         <h4 class="modal-title">Tambah data Pengguna</h4>
                                     </div>
+                                    
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="col-md-6">

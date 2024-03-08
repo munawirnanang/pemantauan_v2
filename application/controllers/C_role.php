@@ -23,7 +23,7 @@ class C_role extends CI_Controller
     {
         
         $data['js']= 'assets/assets/js/js/role.js';
-        $data['menu'] = 'Role';
+        $data['judul'] = 'Role';
 
         $data['fitur'] = $this->db->query("SELECT * FROM fitur")->result_array();
         $data['data_tabel'] = $this->db->get("role")->result_array();

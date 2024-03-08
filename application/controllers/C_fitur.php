@@ -22,7 +22,8 @@ class c_fitur extends CI_Controller
 
     public function index()
     {
-        
+
+        $data['judul'] = 'Fitur';
 
         $data['js']= 'assets/assets/js/js/fitur.js';
 

@@ -29,7 +29,8 @@ class C_beranda extends CI_Controller
     }
     public function index()
     {
-        $this->load->view('admin/inc/v_header');
+        $data['judul'] = 'Beranda';
+        $this->load->view('admin/inc/v_header',$data);
         $this->load->view('admin/inc/v_topbar');
         $this->load->view('admin/inc/v_leftside');
         $this->load->view('admin/main/v_beranda');

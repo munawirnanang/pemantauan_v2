@@ -11,7 +11,7 @@
                         <h4 class="page-title"><?php echo $menu ?> </h4>
                         <ol class="breadcrumb p-0 m-0">
                             <li>
-                                <a href="<?php echo base_url().$menu ?>"><?php echo $menu?></a>
+                                <a href="<?php echo base_url() . $menu ?>"><?php echo $menu ?></a>
                             </li>
                         </ol>
                         <div class="clearfix"></div>
@@ -59,7 +59,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-1 ">
                         <div class="demo-box text-right">
                             Submit
@@ -94,7 +94,7 @@
                         <div class="tab-pane active" id="home1">
                             <div class="container-fluid m-t-30">
                                 <div class="text-center">
-                                    <img src="<?= base_url() ?>assets/assets/images/searching.png" alt="Searching"  width="435">
+                                    <img src="<?= base_url() ?>assets/assets/images/searching.png" alt="Searching" width="435">
                                     <h4>Pilih Daerah, Indikator, dan Tahun pada Form diatas</h4>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                                     <img src="<?= base_url() ?>assets/assets/images/searching.png" alt="Searching" width="435">
                                     <h4>Pilih Daerah, Indikator, dan Tahun pada Form diatas</h4>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                     </div>
                 </div> <!-- end col -->
