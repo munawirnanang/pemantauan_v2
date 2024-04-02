@@ -59,6 +59,8 @@ $route['beranda'] = 'C_beranda/index';
 $route['upload_indikator'] = 'C_uploadIndikator/index';
 
 $route['indikator'] = 'C_indikator/index';
+$route['show_data'] = 'C_indikator/show_data';
+
 $route['data_bps'] = 'C_indikator/data_bps';
 $route['detail_data'] = 'C_indikator/detail_data';
 

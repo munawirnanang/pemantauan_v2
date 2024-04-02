@@ -17,6 +17,7 @@ class C_indikator extends CI_Controller
         $data['judul'] = 'Indikator';
         $data['wilayah'] = $this->db->get('wilayah')->result_array();
         $data['indikator'] = $this->db->get('indikator')->result_array();
+        $data['tahun'] = $this->db->query('SELECT DISTINCT T.tahun FROM nilai_indikator T ORDER BY tahun ASC')->result_array();
         // var_dump($data['wilayah']);
         
         
@@ -27,6 +28,33 @@ class C_indikator extends CI_Controller
         $this->load->view('admin/inc/v_rightside');
         $this->load->view('admin/inc/v_footer');
 
+    }
+
+    public function show_data()
+    {
+        $wilayah = $this->input->post('wilayah');
+        $indikator = $this->input->post('indikator');
+        $tahun = $this->input->post('tahun');
+        
+        for($i=0;$i<count($indikator);$i++){
+            for($w=0;$w<count($wilayah);$w++){
+                for($t=0;$t<count($tahun);$t++){
+                    $dataindikator =
+                    $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator
+                    FROM nilai_indikator NI
+                    WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                    AND NI.id_indikator=$indikator[$i]
+                    AND NI.wilayah='$wilayah[$w]'
+                    AND NI.tahun='$tahun[$t]'")->result_array();
+
+                    echo '<pre>';
+                    var_dump($dataindikator);
+                    echo '</pre>';
+
+                }
+            }
+        }
+        
     }
 
     public function insert_indikator()
@@ -49,78 +77,89 @@ class C_indikator extends CI_Controller
     public function update_data_makro()
     {
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
-        // tpt = '543'
-        // ipm = '2205'
-        // gini = '98'
-        $indikator = '98';
-        $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$indikator.'/key/'.$keyapi;
-        // $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/3/vervar/9999/th/96/turth/0/key/954d935f47f5ee473f310c6410aa304e/';
-       
-        $this->curl->create($url);
-        $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
-        $api = $this->curl->execute();
+        $list_indikator = $this->db->query('SELECT * FROM indikator i')->result_array();
+        // $list_indikator = ['LPE'=>'291',
+        //                   'IPM'=>'2205',
+        //                   'TPT'=>'543',
+        //                   'TK'=>'192',
+        //                   'GINI'=>'98'];
 
-        $data['api'] = json_decode($api, true);
-        $response = json_decode($api, true);
+        foreach($list_indikator as $key){
+            if($key['id_api']=='98'){
+                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turvar/191/key/'.$keyapi;
+            }else{
+                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/key/'.$keyapi;
+            }
+            $id_indikator = $key['id'];
 
-        $idvariabel = $response['var'][0]['val'];
-        $satuan = $response['var'][0]['unit'];
-        $keterangan = $response['var'][0]['note'];
+            $this->curl->create($url);
+            $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
+            $api = $this->curl->execute();
 
-        $id_indikator = $idvariabel;
-                            //lpe      gini        tpt        tk
-        $array_indikator = ['291'=>'1','2205'=>'5','543'=>'6','621'=>'36'];
+            $data['api'] = json_decode($api, true);
+            $response = json_decode($api, true);
 
-        if (isset($array_indikator[$idvariabel])) {
-            $id_indikator = $array_indikator[$idvariabel];
-        }
+            // echo '<pre>';
+            // var_dump($response);
+            // echo '</pre>';
+            
+            $idvariabel = $response['var'][0]['val'];
+            $satuan = strtolower($response['var'][0]['unit']);
+            $keterangan = $response['var'][0]['note'];
 
-        $baris = count($response['vervar']);
-        $karakter = count($response['turvar']);
-        $tahun = count($response['tahun']);
-        $periode = count($response['turtahun']);
-        $array_push = [];
+            if($satuan=='persen'){
+                $satuan='%';
+            }
 
-        for ($i = 0; $i < $baris; $i++) {
-            for ($j = 0; $j < $karakter; $j++) {
-                for ($k = 0; $k < $tahun; $k++) {
-                    for ($l = 0; $l < $periode; $l++) {
 
-                        $id_data = $response['vervar'][$i]['val'] . $idvariabel . $response['turvar'][$j]['val'] . $response['tahun'][$k]['val'] . $response['turtahun'][$l]['val'];
-                        $lower_str = strtolower($response['turtahun'][$l]['label']);
-                        $lower_str = strtolower('maret');
-                        $replace_str=['tahun'=>'00','januari'=>'01','februari'=>'02','maret'=>'03','april'=>'04','mei'=>'05','juni'=>'06','juli'=>'07','agustus'=>'08','september'=>'09','oktober'=>'10','november'=>'11','desember'=>'12'];
+            $baris = count($response['vervar']);
+            $karakter = count($response['turvar']);
+            $tahun = count($response['tahun']);
+            $periode = count($response['turtahun']);
+            $array_push = [];
 
-                        $nasional = 9999 . $idvariabel . $response['turvar'][$j]['val'] . $response['tahun'][$k]['val'] . $response['turtahun'][$l]['val'];
-                        
-                        if (array_key_exists($lower_str, $replace_str)) {
-                            $idperiode = $replace_str[$lower_str];
-                        } else {
-                            $idperiode = 'invalid'; 
-                        }
+            for ($i = 0; $i < $baris; $i++) {
+                for ($j = 0; $j < $karakter; $j++) {
+                    for ($k = 0; $k < $tahun; $k++) {
+                        for ($l = 0; $l < $periode; $l++) {
 
-                       
-                        $push = [
-                            'wilayah' => $response['vervar'][$i]['val'],
-                            'id_indikator' => $id_indikator,
-                            'tahun' => $response['tahun'][$k]['label'],
-                            'periode' => $idperiode,
-                            'satuan' => $satuan,
-                            'idperiode' => $response['tahun'][$k]['label'].$idperiode,
-                            'versi' => date("Y-m-d"),
-                            'keterangan' => $keterangan,
-                            'nasional' => isset($response['datacontent'][$nasional]) ? $response['datacontent'][$nasional] : null,
-                            'nilai' => isset($response['datacontent'][$id_data]) ? $response['datacontent'][$id_data] : null
+                            $id_data = $response['vervar'][$i]['val'] . $idvariabel . $response['turvar'][$j]['val'] . $response['tahun'][$k]['val'] . $response['turtahun'][$l]['val'];
+                            $nasional = 9999 . $idvariabel . $response['turvar'][$j]['val'] . $response['tahun'][$k]['val'] . $response['turtahun'][$l]['val'];
                             
-                        ];
-                        $array_push[] = $push;
+                            $lower_str = strtolower($response['turtahun'][$l]['label']);
+                            $replace_str=['tahun'=>'00','januari'=>'01','februari'=>'02','maret'=>'03','april'=>'04','mei'=>'05','juni'=>'06','juli'=>'07','agustus'=>'08','september'=>'09','oktober'=>'10','november'=>'11','desember'=>'12'];
+
+                            
+                            
+                            $idperiode = 'invalid';
+                            foreach ($replace_str as $key => $value) {
+                                if (strpos($lower_str, $key) !== false) {
+                                    $idperiode = $value;
+                                    break;
+                                }
+                            }
+                            
+                        
+                            $push = [
+                                'wilayah' => $response['vervar'][$i]['val'],
+                                'id_indikator' => $id_indikator,
+                                'tahun' => $response['tahun'][$k]['label'],
+                                'periode' => $idperiode,
+                                'satuan' => $satuan,
+                                'idperiode' => $response['tahun'][$k]['label'].$idperiode,
+                                'versi' => date("Y-m-d"),
+                                'keterangan' => $keterangan,
+                                'nasional' => isset($response['datacontent'][$nasional]) ? $response['datacontent'][$nasional] : null,
+                                'nilai' => isset($response['datacontent'][$id_data]) ? $response['datacontent'][$id_data] : null
+                                
+                            ];
+                            $this->db->replace('nilai_indikator',$push);
+                        }
                     }
                 }
             }
         }
-        echo '<pre>';
-        var_dump($array_push);
-        echo '</pre>';
+        echo 'sukses';
         die;
     }
 
@@ -150,9 +189,6 @@ class C_indikator extends CI_Controller
 
         $item = $response['data'][0]['page'];
         $jumlah = $response['data'][0]['pages']+1;
-
-        
-
 
         $data['tabel'] = [];
         
@@ -285,6 +321,8 @@ class C_indikator extends CI_Controller
             $html_table .= '</tbody>';
 
             $html_table .= '</table>';
+
+            $html_table .= '<b>Sumber Data : Badan Pusat Statistik</b>';
 
             $html_table .= '</div>';
 
