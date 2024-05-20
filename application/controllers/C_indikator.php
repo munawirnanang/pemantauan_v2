@@ -14,6 +14,7 @@ class C_indikator extends CI_Controller
     }
     public function index()
     {
+        $data['js']= 'assets/assets/js/js/indikator.js';
         $data['judul'] = 'Indikator';
         $data['wilayah'] = $this->db->get('wilayah')->result_array();
         $data['indikator'] = $this->db->get('indikator')->result_array();
@@ -32,28 +33,174 @@ class C_indikator extends CI_Controller
 
     public function show_data()
     {
+        
         $wilayah = $this->input->post('wilayah');
         $indikator = $this->input->post('indikator');
         $tahun = $this->input->post('tahun');
+        if(!$wilayah || !$indikator || !$tahun){
+            echo 'isi form';
+            die;
+        }
+
+        if (!isset($_SESSION['cached_data'])) {
+            $_SESSION['cached_data'] = array();
+        }
+
+        $resultArray = array();
         
-        for($i=0;$i<count($indikator);$i++){
-            for($w=0;$w<count($wilayah);$w++){
-                for($t=0;$t<count($tahun);$t++){
-                    $dataindikator =
-                    $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator
-                    FROM nilai_indikator NI
-                    WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-                    AND NI.id_indikator=$indikator[$i]
-                    AND NI.wilayah='$wilayah[$w]'
-                    AND NI.tahun='$tahun[$t]'")->result_array();
+        
+        for ($i = 0; $i < count($indikator); $i++) {
+            for ($w = 0; $w < count($wilayah); $w++) {
+                for ($t = 0; $t < count($tahun); $t++) {
+                    $cache_key = $indikator[$i] . '_' . $wilayah[$w] . '_' . $tahun[$t];
 
-                    echo '<pre>';
-                    var_dump($dataindikator);
-                    echo '</pre>';
+                    if (isset($_SESSION['cached_data'][$cache_key])) {
+                        $dataindikator = $_SESSION['cached_data'][$cache_key];
+                        // var_dump($_SESSION['cached_data'][$cache_key]);
+                    } else {
+                        $dataindikator = $this->db->query(
+                            "SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,I.nama_indikator,W.nama_wilayah
+                            FROM nilai_indikator NI 
+                            JOIN indikator I ON NI.id_indikator=I.id
+                            JOIN wilayah W ON NI.wilayah=W.id
+                            WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                            AND NI.id_indikator=$indikator[$i]
+                            AND NI.wilayah='$wilayah[$w]'
+                            AND NI.tahun='$tahun[$t]'")->result_array();    
 
+                        if (!$dataindikator) {
+                            $nama_indikator = $this->db->query(
+                                "SELECT nama_indikator FROM indikator WHERE id = $indikator[$i]")->row()->nama_indikator;
+                            $nama_wilayah = $this->db->query(
+                                "SELECT nama_wilayah FROM wilayah WHERE id = '$wilayah[$w]'")->row()->nama_wilayah;
+
+                            $dataindikator[0] = [
+                                'wilayah' => $wilayah[$w],
+                                'tahun' => $tahun[$t],
+                                'periode' => '00',
+                                'id_indikator' => $indikator[$i],
+                                'nilai' => null,
+                                'nama_indikator' => $nama_indikator,
+                                'nama_wilayah' => $nama_wilayah     
+                            ];
+                        }
+                        $_SESSION['cached_data'][$cache_key] = $dataindikator;
+                    }
+                    foreach($dataindikator as $data){
+                        $resultArray[] = $data;
+                    }
                 }
             }
         }
+        $periodNames = [
+            '00' => 'Tahunan',
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember'
+        ];
+        $tabel_html ='';
+        $unique_indicators = array_unique(array_column($resultArray, 'nama_indikator'));
+        $unique_years = array_unique(array_column($resultArray, 'tahun'));
+        $unique_periods = array_unique(array_column($resultArray, 'periode'));
+        
+        sort($unique_years);
+        sort($unique_periods);
+        
+        $tabel_html = '<table id="tabel_indikator" class="table table-bordered table-striped"><thead>';
+        $tabel_html .= '<tr>';
+        $tabel_html .= '<th rowspan="3">Provinsi/Kabupaten/Kota</th>';
+        
+        foreach ($unique_indicators as $indicator) {
+            $colspan = 0;
+            foreach ($unique_years as $year) {
+                $count_periods = count(array_unique(array_filter(array_column(array_filter($resultArray, function ($item) use ($indicator, $year) {
+                    return $item['nama_indikator'] == $indicator && $item['tahun'] == $year;
+                }), 'periode'))));
+                $colspan += $count_periods;
+            }
+            $tabel_html .= '<th colspan="'.$colspan.'">'.$indicator.'</th>';
+        }
+        
+        $tabel_html .= '</tr><tr>';
+        
+        $indicator_period_count = [];
+        
+        foreach ($unique_indicators as $indicator) {
+            $indicator_period_count[$indicator] = [];
+            foreach ($unique_years as $year) {
+                $periods = array_unique(array_filter(array_column(array_filter($resultArray, function ($item) use ($indicator, $year) {
+                    return $item['nama_indikator'] == $indicator && $item['tahun'] == $year;
+                }), 'periode')));
+                $indicator_period_count[$indicator][$year] = $periods;
+        
+                if (count($periods) == 1) {
+                    $tabel_html .= '<th rowspan="2">'.$year.'</th>';
+                } else {
+                    $tabel_html .= '<th colspan="'.count($periods).'">'.$year.'</th>';
+                }
+            }
+        }
+        
+        $tabel_html .= '</tr>';
+        
+        $tabel_html .= '<tr>';
+        foreach ($unique_indicators as $indicator) {
+            foreach ($unique_years as $year) {
+                $periods = $indicator_period_count[$indicator][$year];
+                if (count($periods) > 1) {
+                    foreach ($periods as $period) {
+                        $tabel_html .= '<th>'.$periodNames[$period].'</th>';
+                    }
+                }
+            }
+        }
+        $tabel_html .= '</tr>';
+        
+        $tabel_html .= '</thead><tbody>';
+        
+        $unique_wilayahs = array_unique(array_column($resultArray, 'nama_wilayah'));
+        
+        foreach ($unique_wilayahs as $wilayah) {
+            $tabel_html .= '<tr>';
+            $tabel_html .= '<td>'.$wilayah.'</td>';
+        
+            foreach ($unique_indicators as $indicator) {
+                foreach ($unique_years as $year) {
+                    $periods = $indicator_period_count[$indicator][$year];
+                    foreach ($periods as $period) {
+                        $value = '-';
+                        foreach ($resultArray as $data) {
+                            if ($data['nama_wilayah'] == $wilayah && $data['nama_indikator'] == $indicator && $data['tahun'] == $year && $data['periode'] == $period) {
+                                $value = $data['nilai'] !== null ? $data['nilai'] : '-';
+                                break;
+                            }
+                        }
+                        $tabel_html .= '<td>'.$value.'</td>';
+                    }
+                }
+            }
+        
+            $tabel_html .= '</tr>';
+        }
+        
+        $tabel_html .= '</tbody></table>';
+        
+
+        $this->output->set_content_type('text/html')->set_output($tabel_html);
+        // echo '<pre>';
+        // var_dump($resultArray);
+        // echo '<pre>';
+        // echo json_encode($resultArray);
+
         
     }
 
@@ -137,8 +284,7 @@ class C_indikator extends CI_Controller
                                     $idperiode = $value;
                                     break;
                                 }
-                            }
-                            
+                            }                            
                         
                             $push = [
                                 'wilayah' => $response['vervar'][$i]['val'],

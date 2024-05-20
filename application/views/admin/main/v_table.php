@@ -2,12 +2,13 @@
 <!-- Start content here -->
 <!-- ============================================================== -->
 
+
 <div class="content-page">
     <!-- Start content -->
     <div class="content" style="margin-top: 0px;">
         <div class="container">
             <div class="row" style="position: fixed; z-index: 15; width: 80%; background-color: white; padding-top: 5px;">
-                <form action="<?= base_url('show_data')?>" class="form" method="POST">
+                <form id="indikatorform" class="form">
                     <div class="col-12" style="display: flex; align-items: self-end; justify-content: space-between; margin-left: 60px; margin-right: 60px;">
                         <div class="form-group mx-2">
                             <p class="text-muted m-t-30 mb-2" style="justify-self: center; font-size: 10px;">
@@ -41,7 +42,7 @@
                         </div>
                         <div class="form-group mx-2">
                             <p class="text-muted m-t-30 mb-2" style="justify-self: center; font-size: 10px;"></p>
-                            <button type="submit" class="btn btn-danger btn-bordered waves-effect w-md waves-light m-b-5" style="border-radius: 25px;">Submit</button>
+                            <button class="btn btn-danger btn-bordered waves-effect w-md waves-light m-b-5 btn-submit" style="border-radius: 25px;">Submit</button>
                         </div>
                     </div>
                 </form>
@@ -58,19 +59,19 @@
                             </a>
                         </li>
                         <li class="active">
-                            <a href="#profile-b1" data-toggle="tab" aria-expanded="true">
+                            <a href="#grafik-b1" data-toggle="tab" aria-expanded="true">
                                 <span class="visible-xs"><i class="fa fa-user"></i></span>
                                 <span class="hidden-xs">Grafik</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#messages-b1" data-toggle="tab" aria-expanded="false">
+                            <a href="#tabel-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-envelope-o"></i></span>
                                 <span class="hidden-xs">Tabel</span>
                             </a>
                         </li>
                         <li class="">
-                            <a href="#settings-b1" data-toggle="tab" aria-expanded="false">
+                            <a href="#maps-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-cog"></i></span>
                                 <span class="hidden-xs">Maps</span>
                             </a>
@@ -84,7 +85,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane active" id="profile-b1">
+                        <div class="tab-pane active" id="grafik-b1">
                             <div class="col-lg-6">
                                 <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
                                     <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
@@ -136,11 +137,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane" id="messages-b1">
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                            <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                        <div class="tab-pane" id="tabel-b1">
+                            <div class="card-box table-responsive">
+                                <table id="tabel_indikator" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>#</td>
+                                            <td>Indikator 1</td>
+                                            <td>Indikator 2</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="tab-pane" id="settings-b1">
+                        <div class="tab-pane" id="maps-b1">
                             <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
                         </div>

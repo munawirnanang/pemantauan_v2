@@ -27,6 +27,7 @@
     <link href="<?= base_url('assets') ?>/assets/css/pages.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/menu.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/assets/css/spinner.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="<?= base_url('assets') ?>/plugins/switchery/switchery.min.css">
 
     <!-- bootstrap-select -->
@@ -78,6 +79,9 @@
 </head>
 
 <body class="fixed-left">
+<div id="loading-animation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+    <div class="loader"></div>
+</div>
 
     <!-- Begin page -->
     <div id="wrapper">
