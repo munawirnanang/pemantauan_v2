@@ -58,6 +58,13 @@ $route['beranda'] = 'C_beranda/index';
 
 $route['upload_indikator'] = 'C_uploadIndikator/index';
 
+$route['update_indikator'] = 'C_updateIndikator/index';
+$route['tambah_indikator'] = 'C_updateIndikator/tambah_indikator';
+$route['hapus_indikator'] = 'C_updateIndikator/hapus_indikator';
+$route['edit_indikator/(:num)'] = 'C_updateIndikator/edit_indikator/$1';
+$route['update_all_indikator'] = 'C_updateIndikator/update_all_data_makro';
+$route['update_data_indikator/(:num)'] = 'C_updateIndikator/update_data_makro/$1';
+
 $route['indikator'] = 'C_indikator/index';
 $route['show_data'] = 'C_indikator/show_data';
 

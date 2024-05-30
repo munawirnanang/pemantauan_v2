@@ -344,27 +344,29 @@ class C_indikator extends CI_Controller
             $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
             $api = $this->curl->execute();
             $response = json_decode($api, true);
-            $data['tabel'] = array_merge($data['tabel'], $response['data'][1]);
-        }
-
-        foreach($data['tabel'] as $data){
-            $push = [
-                'id_api' => $data['var_id'],
-                'judul' => $data['title'],
-                'kategori' => $data['sub_name'],
-                'sub_kategori' => $data['subcsa_name']
-            ];
-            $this->db->replace('data_bps', $push);
+            // $data['tabel'] = array_merge($data['tabel'], $response['data'][1]);
+            $data_raw = $response['data'][1];
+            foreach($data_raw as $data){
+                $push = [
+                    'id_api' => $data['var_id'],
+                    'judul' => $data['title'],
+                    'kategori' => $data['sub_name'],
+                    'sub_kategori' => $data['subcsa_name']
+                ];
+                $this->db->replace('data_bps', $push);
+            }
         }
     }
     
     public function detail_data()
     {
-        $data['js']= 'assets/assets/js/js/indikator.js';
         try{
+
             $id = $this->input->post('id');
+            
             $keyapi = '954d935f47f5ee473f310c6410aa304e';
             $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/key/'.$keyapi;
+            // $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/534/turvar/1550/key/954d935f47f5ee473f310c6410aa304e';
             $this->curl->create($url);
             $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
             $api = $this->curl->execute();

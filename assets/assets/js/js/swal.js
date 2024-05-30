@@ -14,7 +14,8 @@ $(document).ready(function() {
     var namaHapus = $(this).attr('nama-hapus');
     var id = $(this).attr('id-hapus');
     var controller = $(this).attr('action');
-    console.log(controller);
+    // console.log(controller);
+    // console.log(id);
     
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {

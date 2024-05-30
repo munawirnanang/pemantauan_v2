@@ -42,6 +42,7 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-database"></i> <span> Manajemen Data </span> <span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
                         <li><a href="<?= base_url('upload_indikator'); ?>">Upload Data Indikator</a></li>
+                        <li><a href="<?= base_url('update_indikator'); ?>">Update Data Indikator</a></li>
                         <li><a href="maps-vector.html">Upload Data APBD</a></li>
                     </ul>
                 </li>

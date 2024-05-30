@@ -89,6 +89,9 @@
 <script>
     $(document).ready(function() {
         $('#datatable').dataTable();
+        $('#datatable-indikator').DataTable({
+            pageLength:25
+        });
         $('#datatable-keytable').DataTable({
             keys: true
         });
