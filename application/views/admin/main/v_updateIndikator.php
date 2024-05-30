@@ -155,6 +155,7 @@
                     </div>
                 </div><!-- /.modal -->
                 <div class="flash-data" data-flashdata="<?= $this->session->flashdata('flash') ?>"></div>
+                <div class="flash-gagal" data-flashgagal="<?= $this->session->flashdata('flashgagal') ?>"></div>
 
                 <table id="datatable-indikator" class="table table-striped table-bordered">
                     <thead>

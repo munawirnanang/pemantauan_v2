@@ -305,7 +305,7 @@ class C_updateIndikator extends CI_Controller
         }
 
         if($this->form_validation->run()==false){
-            $this->session->set_flashdata('flash', 'gagal');
+            $this->session->set_flashdata('flashgagal', 'gagal');
             redirect('update_indikator');
         }else{
             if($new_id!=$id)
@@ -324,25 +324,6 @@ class C_updateIndikator extends CI_Controller
             $this->db->set('deskripsi',$deskripsi);
             $this->db->where('id',$id);
             $this->db->update('indikator');
-            // $data_indikator=[
-            //     'id_api' => $id_api,
-            //     'group_id' => $group_id,
-            //     'nama_indikator' => $nama_indikator,
-            //     'nama_tabel' => $nama_tabel,
-            //     'jenis' => $jenis,
-            //     'chart' => $chart,
-            //     'link' => $link,
-            //     'satuan' => $satuan,
-            //     'urutan' => $urutan,
-            //     'ppd' => $ppd,
-            //     'deskripsi' => $deskripsi,
-            // ];
-            // if($new_id!=$id){
-            //     $data_indikator['id'] = $new_id;
-            // };
-            // $this->db->where('id',$id);
-            // $this->db->update('indikator',$data_indikator);
-            
             $this->session->set_flashdata('flash', 'Diubah');
             redirect('update_indikator');
         }

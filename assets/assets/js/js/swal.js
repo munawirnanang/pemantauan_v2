@@ -1,12 +1,22 @@
 $(document).ready(function() {
-    const flashData = $('.flash-data').data('flashdata');
+    const flashData = $('.flash-gagal').data('flashgagal');
     if (flashData) {
       Swal.fire({
-        title: "Berhasil",
-        text: "Data Berhasil "+flashData,
-        icon: "success"
+        title: "Gagal",
+        icon: "error"
       })
     }
+});
+
+$(document).ready(function() {
+  const flashData = $('.flash-data').data('flashdata');
+  if (flashData) {
+    Swal.fire({
+      title: "Berhasil",
+      text: "Data Berhasil "+flashData,
+      icon: "success"
+    })
+  }
 });
 
 $(document).ready(function() {
