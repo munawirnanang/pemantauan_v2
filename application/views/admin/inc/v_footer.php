@@ -75,6 +75,16 @@
 <script src="<?= base_url('assets') ?>/plugins/datatables/dataTables.colVis.js"></script>
 <script src="<?= base_url('assets') ?>/plugins/datatables/dataTables.fixedColumns.min.js"></script>
 
+<!-- highcharts-->
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/highcharts.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/offline-exporting.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/highcharts-more.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/accessibility.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/annotations.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/drilldown.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/sunburst.js"></script>
+
+
 <!-- init -->
 <script src="<?= base_url('assets') ?>/assets/pages/jquery.datatables.init.js"></script>
 
@@ -85,6 +95,7 @@
 
 <script src=<?= empty($js) ? '' : base_url($js) ?>></script>
 <script src="<?= base_url() ?>/assets/assets/js/js/swal.js"></script>
+
 
 <script>
     $(document).ready(function() {

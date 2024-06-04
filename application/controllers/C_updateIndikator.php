@@ -115,6 +115,8 @@ class C_updateIndikator extends CI_Controller
                 $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turth/35/turvar/1550/key/'.$keyapi;
             }elseif($key['id_api']=='533'){
                 $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turth/35/turvar/1550/key/'.$keyapi;
+            }elseif($key['id_api']=='192'){
+                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turvar/434/key/'.$keyapi;
             }else{
                 $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/key/'.$keyapi;
             }
@@ -196,6 +198,8 @@ class C_updateIndikator extends CI_Controller
             $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turth/35/turvar/1550/key/'.$keyapi;
         }elseif($id=='533'){
             $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turth/35/turvar/1550/key/'.$keyapi;
+        }elseif($id=='192'){
+            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turvar/434/key/'.$keyapi;
         }else{
             $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/key/'.$keyapi;
         }

@@ -86,56 +86,7 @@
                             </div>
                         </div>
                         <div class="tab-pane active" id="grafik-b1">
-                            <div class="col-lg-6">
-                                <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
-                                    <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
-                                        <h3 class="panel-title">Panel Default</h3>
-                                    </div> -->
-                                    <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
-                                    <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
-                                        <h3 class="panel-title">Panel Default</h3>
-                                    </div> -->
-                                    <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
-                                    <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
-                                        <h3 class="panel-title">Panel Default</h3>
-                                    </div> -->
-                                    <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
-                                    <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
-                                        <h3 class="panel-title">Panel Default</h3>
-                                    </div> -->
-                                    <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="panel panel-default panel-border" style="height: 300px; border-radius: 30px; border: 1px solid #ccc;">
-                                    <!-- <div class="panel-heading" style="border-radius: 30px 30px 0 0;">
-                                        <h3 class="panel-title">Panel Default</h3>
-                                    </div> -->
-                                    <div class="panel-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="tab-pane" id="tabel-b1">
                             <div class="card-box table-responsive">
@@ -168,7 +119,6 @@
     </footer>
 
 </div>
-
 <!-- ============================================================== -->
 <!-- End rightside content here -->
 <!-- ============================================================== -->

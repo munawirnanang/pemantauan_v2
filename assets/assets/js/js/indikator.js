@@ -42,7 +42,6 @@ $(document).ready(function() {
         event.preventDefault();
 
         $('#loading-animation').show();
-
         var formData = {
             wilayah: $('#wilayah').val(),
             indikator: $('#indikator').val(),
@@ -53,9 +52,66 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                table = response;
-                console.log(table);
-                $('#tabel_indikator').html(table);
+                console.log(response.data)
+                $('#grafik-b1').empty();
+                var htmlChart
+
+                const transformedData = response.data.reduce((result, item) => {
+                    let indikator = result.find(r => r.name === item.nama_indikator);
+                    if (!indikator) {
+                        indikator = { name: item.nama_indikator, id: item.id_indikator, series: [] };
+                        result.push(indikator);
+                    }
+                    let region = indikator.series.find(r => r.name === item.nama_wilayah);
+                    if (!region) {
+                        region = { name: item.nama_wilayah, data: [] };
+                        indikator.series.push(region);
+                    }
+                    region.data.push(parseFloat(item.nilai));
+                    return result;
+                }, []);
+
+                for(i=0;i<transformedData.length;i++){
+                    chartId = transformedData[i].name.replace(/\s+/g, '-');
+                    htmlChart = '<div class="col-lg-6">';
+                    htmlChart += '<div class="panel panel-default panel-border" style="border-radius: 30px; border: 1px solid #ccc;">';
+                    htmlChart += '<div class="panel-body">';
+                    htmlChart += '<div id='+chartId+'>';
+                    htmlChart += '</div>';
+                    htmlChart += '</div>';
+                    htmlChart += '</div>';
+                    htmlChart += '</div>';
+                    console.log(chartId)
+                    
+                    $('#grafik-b1').append(htmlChart);
+                    Highcharts.chart(chartId, {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: transformedData[i].name
+                        },
+                        xAxis: {
+                            categories: response.categories
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: false
+                            },
+                            series: {
+                                connectNulls: true
+                            }
+                        },
+                        series: transformedData[i].series
+                    });
+
+                    htmlChart ='';
+                }
+
+                $('#tabel_indikator').html(response.html_tabel);
 
                 $('#loading-animation').hide();
                 
@@ -68,7 +124,5 @@ $(document).ready(function() {
             }
         });
     });
-
-
 
 });
