@@ -94,8 +94,12 @@
 <!-- <script src="<?= base_url('assets') ?>/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script> -->
 
 <script src=<?= empty($js) ? '' : base_url($js) ?>></script>
+<script src=<?= empty($js2) ? '' : base_url($js2) ?>></script>
 <script src="<?= base_url() ?>/assets/assets/js/js/swal.js"></script>
 
+<script>
+	
+</script>
 
 <script>
     $(document).ready(function() {

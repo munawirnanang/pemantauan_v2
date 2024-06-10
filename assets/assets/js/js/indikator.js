@@ -52,7 +52,8 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                console.log(response.data)
+                console.log(response)
+                const peta = response.geometry.peta;
                 $('#grafik-b1').empty();
                 var htmlChart
 
@@ -81,7 +82,6 @@ $(document).ready(function() {
                     htmlChart += '</div>';
                     htmlChart += '</div>';
                     htmlChart += '</div>';
-                    console.log(chartId)
                     
                     $('#grafik-b1').append(htmlChart);
                     Highcharts.chart(chartId, {
@@ -113,6 +113,125 @@ $(document).ready(function() {
 
                 $('#tabel_indikator').html(response.html_tabel);
 
+                htmlmap = '';
+                htmlmap +="<div class='map-overlay' id='features'><div><p id='pd'><i>sorot kursor pada daerah</i></p></div></div>";
+                
+                $('#map').append(htmlmap);
+
+                //peta
+                let hoveredStateId = null;
+                mapboxgl.accessToken = 'pk.eyJ1IjoiZnJhbnNhbGFtb25kYSIsImEiOiJja2NlZ2xtMjkwMzgxMzJubm9paGJ5dmMyIn0.QJc2VJF6md9CaTilCmgYag';
+                const map = new mapboxgl.Map({
+                    container: 'map', // container ID
+                    style: 'mapbox://styles/mapbox/light-v10',
+                    center: [118.206479, -1.920152], // starting position [lng, lat]
+                    zoom: 4 // starting zoom
+                });
+
+                if (peta.features[0].properties.jenis == 'positif') {
+                    var warna1 = '#ff8989'; //merah
+                    var warna2 = '#a9ff68'; //hijau
+                } else if (peta.features[0].properties.jenis == 'negatif') {
+                    var warna2 = '#ff8989'; //merah
+                    var warna1 = '#a9ff68'; //hijau
+                }
+                
+                map.addControl(new mapboxgl.FullscreenControl());
+                map.addControl(new mapboxgl.NavigationControl());
+
+                map.on('load', () => {
+                    // Add a data source containing GeoJSON data.
+                    map.addSource('maine', {
+                        'type': 'geojson',
+                        'data': peta
+                    });
+
+
+
+                    // Add a new layer to visualize the polygon.
+                    map.addLayer({
+                        'id': 'states-layer',
+                        'type': 'fill',
+                        'source': 'maine', // reference the data source
+                        'layout': {},
+                        'paint': {
+                            'fill-color': [
+                                'interpolate',
+                                ['linear'],
+                                ['get', 'nilai'],
+                                peta.features[0].properties.nasional - 0.0001,
+                                warna1,
+                                peta.features[0].properties.nasional,
+                                warna2,
+                            ], 
+                            'fill-opacity': [
+                                'case',
+                                ['boolean', ['feature-state', 'hover'], false],
+                                1,
+                                0.5
+                            ],
+                        }
+                    });
+                    // Add a black outline around the polygon.
+                    map.addLayer({
+                        'id': 'outline',
+                        'type': 'line',
+                        'source': 'maine',
+                        'layout': {},
+                        'paint': {
+                            'line-color': '#000',
+                            'line-width': [
+                                'case',
+                                ['boolean', ['feature-state', 'click'], false],
+                                2,
+                                0.5
+                            ]
+                        }
+                    });
+
+                    const popup = new mapboxgl.Popup({
+                        closeButton: false,
+                        closeOnClick: false
+                    });
+
+                    map.on('mousemove', 'states-layer', (e) => {
+                        if (e.features.length > 0) {
+                            if (hoveredStateId !== null) {
+                                map.setFeatureState({
+                                    source: 'maine',
+                                    id: hoveredStateId
+                                }, {
+                                    hover: false
+                                });
+                            }
+                            hoveredStateId = e.features[0].id;
+                            map.setFeatureState({
+                                source: 'maine',
+                                id: hoveredStateId
+                            }, {
+                                hover: true
+                            });
+                        }
+                    });
+                    
+                });
+
+                function resizeMap() {
+                    map.resize();
+                }
+                
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                        if ($(e.target).attr('href') === '#maps-b1') {
+                            resizeMap();
+                        }
+                    });
+
+                $(document).ready(function() {
+                    if ($('#maps-b1').hasClass('active')) {
+                        resizeMap();
+                    }
+                });
+
                 $('#loading-animation').hide();
                 
             },
@@ -124,5 +243,7 @@ $(document).ready(function() {
             }
         });
     });
+
+    
 
 });
