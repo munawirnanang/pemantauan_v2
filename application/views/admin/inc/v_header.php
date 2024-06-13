@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,6 +50,10 @@
     <link href="<?= base_url('assets') ?>/plugins/sweetalert2/src/sweetalert2.scss" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/plugins/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css" />
 
+    
+    <link href="<?= base_url('assets') ?>/plugins/ion-rangeslider/ion.rangeSlider.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url('assets') ?>/plugins/ion-rangeslider/ion.rangeSlider.skinModern.css" rel="stylesheet" type="text/css"/>
+
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
@@ -73,11 +78,8 @@
             border-radius: 25px;
         }
         #map { 
-            position: absolute; 
-            top: 0; 
-            bottom: 0; 
-            width: 95%; 
-            height: 95%; 
+            width: 100%; 
+            height: 100%; 
         }
     </style>
 

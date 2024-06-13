@@ -84,6 +84,9 @@
 <script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/drilldown.js"></script>
 <script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/sunburst.js"></script>
 
+<script src="<?php echo base_url("assets"); ?>/plugins/ion-rangeslider/ion.rangeSlider.min.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/pages/jquery.range-sliders.js"></script>
+
 
 <!-- init -->
 <script src="<?= base_url('assets') ?>/assets/pages/jquery.datatables.init.js"></script>
@@ -98,7 +101,34 @@
 <script src="<?= base_url() ?>/assets/assets/js/js/swal.js"></script>
 
 <script>
-	
+	let hoveredStateId = null;
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZnJhbnNhbGFtb25kYSIsImEiOiJja2NlZ2xtMjkwMzgxMzJubm9paGJ5dmMyIn0.QJc2VJF6md9CaTilCmgYag';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/light-v10',
+        center: [118.206479, -1.990152], // starting position [lng, lat]
+        zoom: 3.5 // starting zoom
+    });
+
+    map.addControl(new mapboxgl.FullscreenControl());
+    map.addControl(new mapboxgl.NavigationControl());
+
+
+    function resizeMap() {
+        map.resize();
+    }
+    
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if ($(e.target).attr('href') === '#maps-b1') {
+                resizeMap();
+            }
+        });
+
+    $(document).ready(function() {
+        if ($('#maps-b1').hasClass('active')) {
+            resizeMap();
+        }
+    });
 </script>
 
 <script>

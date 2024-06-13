@@ -24,7 +24,6 @@ class C_indikator extends CI_Controller
     public function index()
     {
         $data['js']= 'assets/assets/js/js/indikator.js';
-        $data['js2']= 'assets/assets/js/js/peta.js';
         $data['judul'] = 'Indikator';
         $data['wilayah'] = $this->db->get('wilayah')->result_array();
         $data['indikator'] = $this->db->get('indikator')->result_array();
@@ -47,6 +46,7 @@ class C_indikator extends CI_Controller
         $wilayah = $this->input->post('wilayah');
         $indikator = $this->input->post('indikator');
         $tahun = $this->input->post('tahun');
+        sort($tahun);
         
         
         if(!$wilayah || !$indikator || !$tahun){
@@ -103,54 +103,120 @@ class C_indikator extends CI_Controller
             }
         }
         $jenis = '';
+        $query_tahun = (implode(",",$tahun));
+        $query_indikator = (implode(",",$indikator));
+        
         if($wilayah[0]==='9999' && $wilayah[1]==='1000'){
-            $properties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
+            $dataproperties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
                             FROM nilai_indikator NI 
                             JOIN indikator I ON NI.id_indikator=I.id
                             JOIN wilayah W ON NI.wilayah=W.id
                             WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
                             AND NI.wilayah LIKE '%00%'
-                            AND NI.id_indikator=$indikator[0]
-                            AND NI.tahun='$tahun[0]'
+                            AND NI.id_indikator IN ($query_indikator)
+                            AND NI.tahun IN ($query_tahun)
                             AND NI.nilai IS NOT NULL
                             AND NI.nasional IS NOT NULL")->result_array();
-            foreach($properties as $id){
-                $lt = nama_provinsi($id['wilayah']);
-                if ($id['wilayah'] == '3100' || $id['wilayah'] == '3400') {
-                    $jenis = 'Polygon';
-                } else {
-                    $jenis = 'MultiPolygon';
-                }
-                $peta[] = [
-                    "type" => "Feature",
-                    "id" => $id['wilayah'],
-                    "geometry" => array(
-                        "type" => $jenis,
-                        "coordinates" => $lt,),
-                    "properties" => array(
-                        "kode"=> $id['wilayah'],
-                        "nama_wilayah" => $id['nama_wilayah'],
-                        "nama_indikator" => $id['nama_indikator'],
-                        "jenis" => $id['jenis'],
-                        "tahun" => $id['tahun'],
-                        "periode" => $id['periode'],
-                        "nasional" => (float) $id['nasional'],
-                        "nilai" => (float) $id['nilai'],
-                        "short_description" =>
-                            "<strong style='padding: 0px;'>" . $id['nama_indikator'] . "</strong> (Periode : " .$id['periode']."-". $id['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $id['nama_wilayah'] . "</b> : " . $id['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $id['nasional'],
-                    ),
-                ];
-                $nilai_peta = $peta;
-            }
 
+            foreach ($dataproperties as $item) {
+                $key = "properties_{$item['id_indikator']}_{$item['tahun']}";
+                if (!isset($properties[$key])) {
+                    $properties[$key] = array();
+                }
+                $properties[$key][] = $item;
+            }
+            foreach($properties as $key => $item){
+                for($o=0; $o<count($item);$o++){
+                    $lt = nama_provinsi($item[$o]['wilayah']);
+                    if ($item[$o]['wilayah'] == '3100' || $item[$o]['wilayah'] == '3400') {
+                        $jenis = 'Polygon';
+                    } else {
+                        $jenis = 'MultiPolygon';
+                    }
+                    $peta[$key][]=[
+                        "type" => "Feature",
+                        "id" => $item[$o]['wilayah'],
+                        "geometry" => array(
+                            "type" => $jenis,
+                            "coordinates" => $lt,
+                        ),
+                        "properties" => array(
+                            "kode"=> $item[$o]['wilayah'],
+                            "nama_wilayah" => $item[$o]['nama_wilayah'],
+                            "nama_indikator" => $item[$o]['nama_indikator'],
+                            "jenis" => $item[$o]['jenis'],
+                            "tahun" => $item[$o]['tahun'],
+                            "periode" => $item[$o]['periode'],
+                            "satuan" => $item[$o]['satuan'],
+                            "nasional" => (float) $item[$o]['nasional'],
+                            "nilai" => (float) $item[$o]['nilai'],
+                            "short_description" =>
+                                "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . $item[$o]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $item[$o]['nasional'],
+                        ),
+                    ];
+                    $nilai_peta[$key]=$peta[$key];
+                }
+            }
             $coordinate = 
             [
                 "peta" => 
                 [
                     "type" => "FeatureCollection",
-                    "features" => $nilai_peta
+                    "features" => [],
                 ]
             ];
+            
+            // $properties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
+            //                 FROM nilai_indikator NI 
+            //                 JOIN indikator I ON NI.id_indikator=I.id
+            //                 JOIN wilayah W ON NI.wilayah=W.id
+            //                 WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+            //                 AND NI.wilayah LIKE '%00%'
+            //                 AND NI.id_indikator=$indikator[0]
+            //                 AND NI.tahun=$tahun[0] 
+            //                 AND NI.nilai IS NOT NULL
+            //                 AND NI.nasional IS NOT NULL")->result_array();
+
+            // foreach($properties as $id){
+            //     $lt = nama_provinsi($id['wilayah']);
+            //     if ($id['wilayah'] == '3100' || $id['wilayah'] == '3400') {
+            //         $jenis = 'Polygon';
+            //     } else {
+            //         $jenis = 'MultiPolygon';
+            //     }
+            //     $peta[] = [
+            //         "type" => "Feature",
+            //         "id" => $id['wilayah'],
+            //         "geometry" => array(
+            //             "type" => $jenis,
+            //             // "coordinates" => $lt,
+            //         ),
+            //         "properties" => array(
+            //             "kode"=> $id['wilayah'],
+            //             "nama_wilayah" => $id['nama_wilayah'],
+            //             "nama_indikator" => $id['nama_indikator'],
+            //             "jenis" => $id['jenis'],
+            //             "tahun" => $id['tahun'],
+            //             "periode" => $id['periode'],
+            //             "nasional" => (float) $id['nasional'],
+            //             "nilai" => (float) $id['nilai'],
+            //             "short_description" =>
+            //                 "<strong style='padding: 0px;'>" . $id['nama_indikator'] . "</strong> (Periode : " .$id['periode']."-". $id['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $id['nama_wilayah'] . "</b> : " . $id['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $id['nasional'],
+            //         ),
+            //     ];
+            //     $nilai_peta = $peta;
+            // }
+
+            // $coordinate = 
+            // [
+            //     "peta" => 
+            //     [
+            //         "type" => "FeatureCollection",
+            //         "features" => $nilai_peta
+            //     ]
+            // ];
+            // var_dump($coordinate);
+            // die;
         }else{
             for($s=1; $s<count($resultArray);$s++){
                 $lt = nama_provinsi($resultArray[$s]['wilayah']);
@@ -159,6 +225,7 @@ class C_indikator extends CI_Controller
                 } else {
                     $jenis = 'MultiPolygon';
                 }
+                // var_dump($jenis);
                 $peta[] = [
                     "type" => "Feature",
                     "id" => $resultArray[$s]['wilayah'],
@@ -308,7 +375,8 @@ class C_indikator extends CI_Controller
         $data2=[
             'data' => $resultArray,
             'categories' => $categories,
-            'geometry' => $coordinate,
+            'nilai_data' => $nilai_peta,
+            'unique_indikator' => $unique_indicators,
             'html_tabel' => $tabel_html
         ];
         

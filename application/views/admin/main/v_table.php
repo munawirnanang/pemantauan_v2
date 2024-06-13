@@ -104,14 +104,52 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="maps-b1" onclick="resizeMap()"> 
-                            <div class="col-lg-12">
-                                <div class="panel panel-default panel-border">
-                                    <div class="panel-body" style="height: 450px">
-                                        <div id="map">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="panel panel-default panel-border">
+                                        <div class="panel-body" style="height: 450px">
+                                            <div class="text-center h5" id="judul_indikator">-</div>
+                                            <hr>
+                                            <div class="row">
+                                                <label id="selecttahun"></label>
+                                                <input id="slider" type="range" min="0" max="4" step="1" value="0">
+                                            </div>
+                                            <hr>
+                                            <hr>
+                                            <div class="row">
+                                            <div id="satuan"></div>
+                                            <p>Keterangan :</p>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <div id="warna1" style="height: 20px; width: 20px; background-color: #ff8989; margin-right: 20px;"></div>
+                                                    </td>
+                                                    <td>
+                                                        <div id="keterangan1"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div id="warna2" style="height: 20px; width: 20px; background-color: #a9ff68; margin-right: 20px;"></div>
+                                                    </td>
+                                                    <td>
+                                                        <div id="keterangan2"></div>
+                                                    </td>
+                                                </tr>
+                                            </table>    
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                  
+                                <div class="col-lg-9">
+                                    <div class="panel panel-default panel-border">
+                                        <div class="panel-body" style="height: 450px">
+                                            <div id="map">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
                         </div>
                     </div>
                 </div> <!-- end col -->
