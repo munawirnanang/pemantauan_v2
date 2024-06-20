@@ -107,33 +107,53 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                     <div class="panel panel-default panel-border">
-                                        <div class="panel-body" style="height: 450px">
-                                            <div class="text-center h5" id="judul_indikator">-</div>
+                                        <div class="panel-body" style="height: 530px">
+                                            <div class="text-center h6" id="judul_indikator">-</div>
                                             <hr>
+                                            <div class="row m-t-0" id="alloption">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-block btn-primary waves-effect waves-light btn-xs m-b-5" name="indktr" id="indikator1">-</button>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="indktr" id="indikator2">-</button>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="indktr" id="indikator3">-</button>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="indktr" id="indikator4">-</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr id="divider">
                                             <div class="row">
                                                 <label id="selecttahun"></label>
                                                 <input id="slider" type="range" min="0" max="4" step="1" value="0">
                                             </div>
                                             <hr>
+                                            <div class="text" id="description">
+
+                                            </div>                                              
                                             <hr>
                                             <div class="row">
-                                            <div id="satuan"></div>
-                                            <p>Keterangan :</p>
+                                            <div  id="satuan" style="font-size: 14px;"></div>
+                                            <p style="font-size: 14px;">Keterangan :</p>
                                             <table>
                                                 <tr>
                                                     <td>
-                                                        <div id="warna1" style="height: 20px; width: 20px; background-color: #ff8989; margin-right: 20px;"></div>
+                                                        <div id="warna1" style="height: 15px; width: 15px; background-color: #ff8989; margin-right: 15px;"></div>
                                                     </td>
                                                     <td>
-                                                        <div id="keterangan1"></div>
+                                                        <div id="keterangan1" style="font-size: 12px;"></div>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <div id="warna2" style="height: 20px; width: 20px; background-color: #a9ff68; margin-right: 20px;"></div>
+                                                        <div id="warna2" style="height: 15px; width: 15px; background-color: #a9ff68; margin-right: 15px;"></div>
                                                     </td>
                                                     <td>
-                                                        <div id="keterangan2"></div>
+                                                        <div id="keterangan2" style="font-size: 12px;"></div>
                                                     </td>
                                                 </tr>
                                             </table>    
@@ -143,7 +163,7 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="panel panel-default panel-border">
-                                        <div class="panel-body" style="height: 450px">
+                                        <div class="panel-body" style="height: 530px">
                                             <div id="map">
                                             </div>
                                         </div>

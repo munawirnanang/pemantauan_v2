@@ -47,20 +47,52 @@ $(document).ready(function() {
             indikator: $('#indikator').val(),
             tahun: $('#tahun').val()
         };
+        
         $.ajax({
             url: base_url+"show_data",
             method: 'POST',
             data: formData,
             success: function(response) {
                 console.log(response)
-                const activeIdIndikator = formData.indikator.sort();
-                const dataArray = Object.values(response.data);
+                const activeIndikator = Object.values(response.unique_indikator);
                 
-                const years = Object.keys(response.nilai_data).filter(key => key.startsWith('properties_'+activeIdIndikator+'_')).map(key => key.split('_').pop());
+                const activeIdIndikator = formData.indikator.sort();
+                var inputIndikator = ["#indikator1", "#indikator2", "#indikator3", "#indikator4"];
+                
+                if (activeIndikator.length === 1) {
+                    $('#alloption').hide();
+                    $('#divider').hide();
+                } else {
+                    $('#alloption').show();
+                    $('#divider').show();
+                    for (var i = 0; i < inputIndikator.length; i++) {
+                        if (i < activeIndikator.length) {
+                            $(inputIndikator[i]).text(activeIndikator[i]).show();
+                            $(inputIndikator[i]).val(activeIdIndikator[i]);
+                        } else {
+                            $(inputIndikator[i]).hide();
+                        }
+                    }
+                }
+                
+                const firstIdIndikator = activeIdIndikator[0]
+                const dataArray = Object.values(response.data);
+
+                const uniqueNumbers = new Set(
+                    Object.keys(response.nilai_data)
+                        .filter(key => key.startsWith('properties_'))
+                        .map(key => key.match(/properties_(\d+)_\d+/)[1])
+                );
+                const selectedIndikator = Array.from(uniqueNumbers);
+                
+                const years = Object.keys(response.nilai_data).filter(key => key.startsWith('properties_'+firstIdIndikator+'_')).map(key => key.split('_').pop());
                 const minYear = Math.min(...years);
                 const maxYear = Math.max(...years);
+                
+                const defaultIndikator = Math.min(...selectedIndikator);
 
                 const slider = document.getElementById('slider');
+                
 
                 slider.min = minYear;
                 slider.max = maxYear;
@@ -69,60 +101,28 @@ $(document).ready(function() {
                 
                 $('#selecttahun').text(minYear)
                 const geojsonData = {};
-                years.forEach(year => {
-                    geojsonData[year] = {
-                        type: 'FeatureCollection',
-                        features: response.nilai_data[`properties_`+activeIdIndikator+`_${year}`].map(f => (
-                            f
-                
-                        ))
-                    };
+
+                selectedIndikator.forEach(i => {
+                    geojsonData[i] = {};  // Initialize sub-object for each unique number
+                    years.forEach(year => {
+                        const propertyKey = `properties_${i}_${year}`;
+                        if (response.nilai_data.hasOwnProperty(propertyKey)) {
+                            geojsonData[i][year] = {
+                                type: 'FeatureCollection',
+                                features: response.nilai_data[propertyKey].map(f => f)
+                            };
+                        } else {
+                            geojsonData[i][year] = {
+                                type: 'FeatureCollection',
+                                features: []
+                            };
+                        }
+                    });
                 });
-                console.log(geojsonData)
-                
+
                 $('#judul_indikator').text(response.data[0].nama_indikator)
-                // console.log(peta);
-                // console.log(peta.properties);
-
-
-                
-                
-                // const activeIndikator = Object.values(response.unique_indikator);
-                // const activeIdIndikator = formData.indikator.sort();
-                // const activeTahun = formData.tahun.sort();
-                // var tahunButtons = ["#tahun_indikator1", "#tahun_indikator2", "#tahun_indikator3", "#tahun_indikator4"];
-                // for (var i = 0; i < tahunButtons.length; i++) {
-                //     if (i < activeTahun.length) {
-                //         $(tahunButtons[i]).text(activeTahun[i]).prop('disabled', false);
-                //     } else {
-                //         $(tahunButtons[i]).text('-').prop('disabled', true);
-                //     }
-                // }
-                // console.log(response.data[0].nama_indikator);
-                // $('#judul_indikator').text(response.data[0].nama_indikator)
-               
-                // let peta = {
-                //     "type": "FeatureCollection",
-                //     "features": response.nilai_data["properties_"+activeIdIndikator[0]+"_"+activeTahun[0]]
-                // };
-                
-
-                // $(".btn-block").click(function() {
-                //     var btnTahun = $(this).text();
-                //     if (btnTahun !== '-') {
-                //         $(".btn-block").removeClass("btn-primary").addClass("btn-default");
-                //         $(this).removeClass("btn-default").addClass("btn-primary");
-                //         let peta = {
-                //             "type": "FeatureCollection",
-                //             "features": response.nilai_data["properties_"+activeIdIndikator[0]+"_" + btnTahun]
-                //         };
-                //         console.log(response.nilai_data["properties_"+activeIdIndikator[0]+"_" + btnTahun]);
-                //         if (map.getSource('maine')) {
-                //             map.getSource('maine').setData(peta);
-                //         };
-                //     }
-                // });    
                 $('#grafik-b1').empty();
+
                 var htmlChart
 
                 const transformedData = dataArray.reduce((result, item) => {
@@ -196,7 +196,8 @@ $(document).ready(function() {
                     zoom: 3.5 // starting zoom
                 });
 
-                let peta = geojsonData[minYear].features[0];
+                let peta = geojsonData[defaultIndikator][minYear].features[0];
+                console.log(peta);
                 
                 const setColorSettings = (properties) => {
                     if (properties.jenis === 'positif') {
@@ -212,8 +213,7 @@ $(document).ready(function() {
                     }
                 };
 
-                console.log(peta.properties.satuan);
-                $('#satuan').text('satuan :'+peta.properties.satuan);
+                $('#satuan').text('Satuan : '+peta.properties.satuan);
                 if(peta.properties.jenis === 'positif'){
                     $('#keterangan1').text('<  Nasional Capaian Nasional : '+peta.properties.nasional);
                     $('#keterangan2').text('>= Nasional Capaian Nasional : '+peta.properties.nasional);
@@ -231,7 +231,7 @@ $(document).ready(function() {
                     // Add a data source containing GeoJSON data.
                     map.addSource('maine', {
                         'type': 'geojson',
-                        'data': geojsonData[minYear]
+                        'data': geojsonData[defaultIndikator][minYear]
                     });
 
                     // Add a new layer to visualize the polygon.
@@ -258,6 +258,7 @@ $(document).ready(function() {
                             ],
                         }
                     });
+                    
                     // Add a black outline around the polygon.
                     map.addLayer({
                         'id': 'outline',
@@ -276,27 +277,171 @@ $(document).ready(function() {
                     });
 
 
-                    slider.addEventListener('input', (e) => {
-                        const year = e.target.value;
+                    if (activeIndikator.length === 1) {
+                        slider.addEventListener('input', (e) => {
+                            const year = e.target.value;
 
-                        console.log(geojsonData[year].features[0]);
-                        const newPeta = geojsonData[year].features[0];
-                        const newColorSettings = setColorSettings(newPeta.properties);
+                            console.log(geojsonData[defaultIndikator][year].features[0]);
+                            const newPeta = geojsonData[defaultIndikator][year].features[0];
+                            const newColorSettings = setColorSettings(newPeta.properties);
 
-                        map.getSource('maine').setData(geojsonData[year]);
+                            map.getSource('maine').setData(geojsonData[defaultIndikator][year]);
+                            
+                            $('#selecttahun').text(year);
+                            if(newPeta.properties.jenis === 'positif'){
+                                $('#keterangan1').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                                $('#keterangan2').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                            }else{
+                                $('#keterangan1').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                                $('#keterangan2').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                            }
+                                map.setPaintProperty('states-layer', 'fill-color', [
+                                    'interpolate',
+                                    ['linear'],
+                                    ['get', 'nilai'],
+                                    newPeta.properties.nasional - 0.0001,
+                                    newColorSettings.warna1,
+                                    newPeta.properties.nasional,
+                                    newColorSettings.warna2,
+                                ]);
+                        });
+                    }else{
+
+                        $('button[name="indktr"]').click(function() {
+                            var btnIndktr = $(this).val();
+                            var namaIndktr = $(this).text();
+                            console.log('Button clicked:', namaIndktr);
+                            
+                            $('#judul_indikator').text(namaIndktr)
+                            if (btnIndktr !== '-') {
+                                $('button[name="indktr"]').removeClass("btn-primary").addClass("btn-default");
+                                $(this).removeClass("btn-default").addClass("btn-primary");
+                            }
                         
-                        $('#selecttahun').text(year)
+                            const updateMapData = (year) => {
+                        
+                                if (!geojsonData[btnIndktr] || !geojsonData[btnIndktr][year]) {
+                                    console.error('Data not found for:', btnIndktr, year);
+                                    return;
+                                }
+                        
+                                console.log(geojsonData[btnIndktr][year].features[0]);
+                                const newPeta = geojsonData[btnIndktr][year].features[0];
+                                const newColorSettings = setColorSettings(newPeta.properties);
+                        
+                                map.getSource('maine').setData(geojsonData[btnIndktr][year]);
+                        
+                                $('#satuan').text('Satuan : '+newPeta.properties.satuan);
+                                $('#selecttahun').text(year);
+                                if (newPeta.properties.jenis === 'positif') {
+                                    $('#keterangan1').html('<  Nasional Capaian Nasional : ' + newPeta.properties.nasional);
+                                    $('#keterangan2').html('>= Nasional Capaian Nasional : ' + newPeta.properties.nasional);
+                                } else {
+                                    $('#keterangan1').html('>= Nasional Capaian Nasional : ' + newPeta.properties.nasional);
+                                    $('#keterangan2').html('<  Nasional Capaian Nasional : ' + newPeta.properties.nasional);
+                                }
+                        
+                                map.setPaintProperty('states-layer', 'fill-color', [
+                                    'interpolate',
+                                    ['linear'],
+                                    ['get', 'nilai'],
+                                    newPeta.properties.nasional - 0.0001,
+                                    newColorSettings.warna1,
+                                    newPeta.properties.nasional,
+                                    newColorSettings.warna2,
+                                ]);
+                            };
+                        
+                            const currentYear = slider.value;
+                            updateMapData(currentYear);
+                        
+                            // Add event listener to the slider
+                            slider.addEventListener('input', (e) => {
+                                const year = e.target.value;
+                                updateMapData(year);
+                            });
+                        });    
+                    }
+                    
+                    // slider.addEventListener('input', (e) => {
+                    //     const year = e.target.value;
 
-                        map.setPaintProperty('states-layer', 'fill-color', [
-                            'interpolate',
-                            ['linear'],
-                            ['get', 'nilai'],
-                            newPeta.properties.nasional - 0.0001,
-                            newColorSettings.warna1,
-                            newPeta.properties.nasional,
-                            newColorSettings.warna2,
-                        ]);
+                    //     console.log(geojsonData[defaultIndikator][year].features[0]);
+                    //     const newPeta = geojsonData[defaultIndikator][year].features[0];
+                    //     const newColorSettings = setColorSettings(newPeta.properties);
+
+                    //     map.getSource('maine').setData(geojsonData[defaultIndikator][year]);
+                        
+                    //     $('#selecttahun').text(year);
+                    //     if(newPeta.properties.jenis === 'positif'){
+                    //         $('#keterangan1').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                    //         $('#keterangan2').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                    //     }else{
+                    //         $('#keterangan1').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                    //         $('#keterangan2').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                    //     }
+
+                    //     map.setPaintProperty('states-layer', 'fill-color', [
+                    //         'interpolate',
+                    //         ['linear'],
+                    //         ['get', 'nilai'],
+                    //         newPeta.properties.nasional - 0.0001,
+                    //         newColorSettings.warna1,
+                    //         newPeta.properties.nasional,
+                    //         newColorSettings.warna2,
+                    //     ]);
+                    // });
+
+                    const popup = new mapboxgl.Popup({
+                        closeButton: false,
+                        closeOnClick: false
                     });
+
+                    map.on('mousemove', 'states-layer', (e) => {
+                        if (e.features.length > 0) {
+                            if (hoveredStateId !== null) {
+                                map.setFeatureState({
+                                    source: 'maine',
+                                    id: hoveredStateId
+                                }, {
+                                    hover: false
+                                });
+                            }
+                            hoveredStateId = e.features[0].id;
+                            map.setFeatureState({
+                                source: 'maine',
+                                id: hoveredStateId
+                            }, {
+                                hover: true
+                            });
+                        }
+                    });
+
+                    map.on('mouseleave', 'states-layer', () => {
+                        if (hoveredStateId !== null) {
+                            map.setFeatureState({
+                                source: 'maine',
+                                id: hoveredStateId
+                            }, {
+                                hover: false
+                            });
+                        }
+                        hoveredStateId = null;
+                    });
+
+                    map.on('mouseenter', 'states-layer', (e) => {
+                        popup.setLngLat(e.lngLat).setHTML(e.features[0].properties.short_description).addTo(map)
+                    });
+
+                    map.on('mouseleave', 'states-layer', (e) => {
+                        map.getCanvas().style.cursor = '';
+                        popup.remove();
+                    });
+
+                    map.on('click', 'states-layer', (e) => {
+                        document.getElementById('description').innerHTML = '<p style="margin-bottom: 2px;">' + e.features[0].properties.description + '</p>';
+                    });
+                    
                     
                 });
 

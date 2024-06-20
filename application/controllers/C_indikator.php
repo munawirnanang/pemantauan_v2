@@ -105,6 +105,12 @@ class C_indikator extends CI_Controller
         $jenis = '';
         $query_tahun = (implode(",",$tahun));
         $query_indikator = (implode(",",$indikator));
+        $onlyprovinsi = array_filter($resultArray, function($item) {
+            return substr($item['wilayah'], -2) === "00";
+        });
+
+        $onlyprovinsi = array_values($onlyprovinsi);
+        
         
         if($wilayah[0]==='9999' && $wilayah[1]==='1000'){
             $dataproperties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
@@ -152,112 +158,102 @@ class C_indikator extends CI_Controller
                             "nilai" => (float) $item[$o]['nilai'],
                             "short_description" =>
                                 "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . $item[$o]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $item[$o]['nasional'],
+                            "description" =>
+                                "<table>
+                                    <tr>
+                                        <td colspan='2'>
+                                            <div id='nama_periode_provinsi'><strong>".$item[$o]['nama_wilayah']." Periode(". $item[$o]['tahun'].")</strong></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class='text' style='font-size: 14px;'><strong>Capaian :</strong></div> 
+                                        </td>
+                                        <td>
+                                                <div class='text' style='font-size: 14px;'>".(float) $item[$o]['nilai']."</div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class='text' style='font-size: 14px;'><strong>Capaian Nasional:</strong></div> 
+                                        </td>
+                                        <td>
+                                                <div class='text' style='font-size: 14px;'>".$item[$o]['nasional']."</div> 
+                                        </td>
+                                    </tr>
+                                </table>"
                         ),
                     ];
                     $nilai_peta[$key]=$peta[$key];
                 }
             }
-            $coordinate = 
-            [
-                "peta" => 
-                [
-                    "type" => "FeatureCollection",
-                    "features" => [],
-                ]
-            ];
-            
-            // $properties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
-            //                 FROM nilai_indikator NI 
-            //                 JOIN indikator I ON NI.id_indikator=I.id
-            //                 JOIN wilayah W ON NI.wilayah=W.id
-            //                 WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-            //                 AND NI.wilayah LIKE '%00%'
-            //                 AND NI.id_indikator=$indikator[0]
-            //                 AND NI.tahun=$tahun[0] 
-            //                 AND NI.nilai IS NOT NULL
-            //                 AND NI.nasional IS NOT NULL")->result_array();
 
-            // foreach($properties as $id){
-            //     $lt = nama_provinsi($id['wilayah']);
-            //     if ($id['wilayah'] == '3100' || $id['wilayah'] == '3400') {
-            //         $jenis = 'Polygon';
-            //     } else {
-            //         $jenis = 'MultiPolygon';
-            //     }
-            //     $peta[] = [
-            //         "type" => "Feature",
-            //         "id" => $id['wilayah'],
-            //         "geometry" => array(
-            //             "type" => $jenis,
-            //             // "coordinates" => $lt,
-            //         ),
-            //         "properties" => array(
-            //             "kode"=> $id['wilayah'],
-            //             "nama_wilayah" => $id['nama_wilayah'],
-            //             "nama_indikator" => $id['nama_indikator'],
-            //             "jenis" => $id['jenis'],
-            //             "tahun" => $id['tahun'],
-            //             "periode" => $id['periode'],
-            //             "nasional" => (float) $id['nasional'],
-            //             "nilai" => (float) $id['nilai'],
-            //             "short_description" =>
-            //                 "<strong style='padding: 0px;'>" . $id['nama_indikator'] . "</strong> (Periode : " .$id['periode']."-". $id['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $id['nama_wilayah'] . "</b> : " . $id['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $id['nasional'],
-            //         ),
-            //     ];
-            //     $nilai_peta = $peta;
-            // }
-
-            // $coordinate = 
-            // [
-            //     "peta" => 
-            //     [
-            //         "type" => "FeatureCollection",
-            //         "features" => $nilai_peta
-            //     ]
-            // ];
-            // var_dump($coordinate);
-            // die;
-        }else{
-            for($s=1; $s<count($resultArray);$s++){
-                $lt = nama_provinsi($resultArray[$s]['wilayah']);
-                if ($resultArray[$s]['wilayah'] == '3100' || $resultArray[$s]['wilayah'] == '3400') {
-                    $jenis = 'Polygon';
-                } else {
-                    $jenis = 'MultiPolygon';
+        }
+        else
+        {
+            foreach ($onlyprovinsi as $item) {
+                $key = "properties_{$item['id_indikator']}_{$item['tahun']}";
+                if (!isset($properties[$key])) {
+                    $properties[$key] = array();
                 }
-                // var_dump($jenis);
-                $peta[] = [
-                    "type" => "Feature",
-                    "id" => $resultArray[$s]['wilayah'],
-                    "geometry" => array(
-                        "type" => $jenis,
-                        "coordinates" => $lt,
-                        "id" => $resultArray[$s]['wilayah'],
-                    ),
-                    "properties" => array(
-                        "kode" => $resultArray[$s]['wilayah'],
-                        "nama_wilayah" => $resultArray[$s]['nama_wilayah'],
-                        "nama_indikator" => $resultArray[$s]['nama_indikator'],
-                        "jenis" => $resultArray[$s]['jenis'],
-                        "tahun" => $resultArray[$s]['tahun'],
-                        "periode" => $resultArray[$s]['periode'],
-                        "nasional" => (float) $resultArray[$s]['nasional'],
-                        "nilai" => (float) $resultArray[$s]['nilai'],
-                        "short_description" =>
-                            "<strong style='padding: 0px;'>" . $resultArray[$s]['nama_indikator'] . "</strong> (Periode : " .$resultArray[$s]['periode']."-". $resultArray[$s]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $resultArray[$s]['nama_wilayah'] . "</b> : " . $resultArray[$s]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $resultArray[$s]['nasional'],                    
-                    ),
-                ];
-                $nilai_peta = $peta;
+                $properties[$key][] = $item;
             }
-    
-            $coordinate = 
-            [
-                "peta" => 
-                [
-                    "type" => "FeatureCollection",
-                    "features" => $nilai_peta
-                ]
-            ];
+            foreach($properties as $key => $item){
+                for($o=0; $o<count($item);$o++){
+                    $lt = nama_provinsi($item[$o]['wilayah']);
+                    if ($item[$o]['wilayah'] == '3100' || $item[$o]['wilayah'] == '3400') {
+                        $jenis = 'Polygon';
+                    } else {
+                        $jenis = 'MultiPolygon';
+                    }
+                    $peta[$key][]=[
+                        "type" => "Feature",
+                        "id" => $item[$o]['wilayah'],
+                        "geometry" => array(
+                            "type" => $jenis,
+                            "coordinates" => $lt,
+                        ),
+                        "properties" => array(
+                            "kode"=> $item[$o]['wilayah'],
+                            "nama_wilayah" => $item[$o]['nama_wilayah'],
+                            "nama_indikator" => $item[$o]['nama_indikator'],
+                            "jenis" => $item[$o]['jenis'],
+                            "tahun" => $item[$o]['tahun'],
+                            "periode" => $item[$o]['periode'],
+                            "satuan" => $item[$o]['satuan'],
+                            "nasional" => (float) $item[$o]['nasional'],
+                            "nilai" => (float) $item[$o]['nilai'],
+                            "short_description" =>
+                                "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . $item[$o]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $item[$o]['nasional'],
+                            "description" =>
+                                "<table>
+                                    <tr>
+                                        <td colspan='2'>
+                                            <div id='nama_periode_provinsi'><strong>".$item[$o]['nama_wilayah']." Periode(". $item[$o]['tahun'].")</strong></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class='text' style='font-size: 14px;'><strong>Capaian :</strong></div> 
+                                        </td>
+                                        <td>
+                                                <div class='text' style='font-size: 14px;'>".(float) $item[$o]['nilai']."</div> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class='text' style='font-size: 14px;'><strong>Capaian Nasional:</strong></div> 
+                                        </td>
+                                        <td>
+                                                <div class='text' style='font-size: 14px;'>".$item[$o]['nasional']."</div> 
+                                        </td>
+                                    </tr>
+                                </table>"
+                        ),
+                    ];
+                    $nilai_peta[$key]=$peta[$key];
+                }
+            }
         }
 
         $periodNames = [

@@ -73,7 +73,7 @@
         <![endif]-->
 
 
-    <style>
+<style>
         .selectcustom>button {
             border-radius: 25px;
         }
@@ -81,7 +81,15 @@
             width: 100%; 
             height: 100%; 
         }
-    </style>
+        .mapboxgl-popup {
+        max-width: 400px;
+        font:
+            12px/20px 'Helvetica Neue',
+            Arial,
+            Helvetica,
+            sans-serif;
+    }
+</style>
 
     <script>
         var base_url = "<?php echo base_url(); ?>";
