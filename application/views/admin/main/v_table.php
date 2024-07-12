@@ -52,25 +52,25 @@
             <div class="row" style="margin-left: 25px; margin-right: 25px; margin-top: 109px;">
                 <div class="col-12">
                     <ul class="nav nav-tabs tabs-bordered" style="position: fixed; z-index: 14; width: 75%; background-color: white;">
-                        <li class="">
+                        <li class="active">
                             <a href="#home-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-home"></i></span>
                                 <span class="hidden-xs">Overview</span>
                             </a>
                         </li>
-                        <li class="active">
-                            <a href="#grafik-b1" data-toggle="tab" aria-expanded="true">
+                        <li class="hide-tab">
+                            <a href="#grafik-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-user"></i></span>
                                 <span class="hidden-xs">Grafik</span>
                             </a>
                         </li>
-                        <li class="">
+                        <li class="hide-tab">
                             <a href="#tabel-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-envelope-o"></i></span>
                                 <span class="hidden-xs">Tabel</span>
                             </a>
                         </li>
-                        <li class="">
+                        <li class="hide-tab">
                             <a href="#maps-b1" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="fa fa-cog"></i></span>
                                 <span class="hidden-xs">Maps</span>
@@ -78,14 +78,13 @@
                         </li>
                     </ul>
                     <div class="tab-content" style="padding-top: 60px;">
-                        <div class="tab-pane" id="home-b1">
-                            <div class="card-box table-responsive">
-                                <h4 class="m-t-0 header-title m-b-15"><b>API</b></h4>
-                                <table id="datatable" class="table table-striped table-bordered">
-                                </table>
+                        <div class="tab-pane active" id="home-b1" onclick="resizeMap()">
+                            <div class="row" id="highlightoverview">
+                                <?= $html_card?>
                             </div>
                         </div>
-                        <div class="tab-pane active" id="grafik-b1">
+
+                        <div class="tab-pane" id="grafik-b1">
                             
                         </div>
                         <div class="tab-pane" id="tabel-b1">
@@ -108,8 +107,25 @@
                                 <div class="col-lg-3">
                                     <div class="panel panel-default panel-border">
                                         <div class="panel-body" style="height: 530px">
-                                            <div class="text-center h6" id="judul_indikator">-</div>
+                                            <div class="text-center h5" id="judul_indikator">-</div>
                                             <hr>
+                                            <div class="row m-t-0" id="tahunoption">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <button class="btn btn-block btn-primary waves-effect waves-light btn-xs m-b-5" name="tahun" id="tahun1">-</button>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="tahun" id="tahun2">-</button>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="tahun" id="tahun3">-</button>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <button class="btn btn-block btn-default waves-effect waves-light btn-xs m-b-5" name="tahun" id="tahun4">-</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr id="divider1">
                                             <div class="row m-t-0" id="alloption">
                                                 <div class="row">
                                                     <div class="col-sm-12">
@@ -127,11 +143,11 @@
                                                 </div>
                                             </div>
                                             <hr id="divider">
-                                            <div class="row">
+                                            <div class="row" id="idslider">
                                                 <label id="selecttahun"></label>
                                                 <input id="slider" type="range" min="0" max="4" step="1" value="0">
+                                                <hr>
                                             </div>
-                                            <hr>
                                             <div class="text" id="description">
 
                                             </div>                                              
@@ -172,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                </div> <!-- end col -->
+                </div> 
             </div>
             <!-- end row -->
         </div> <!-- container -->

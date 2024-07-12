@@ -68,8 +68,9 @@ $route['update_data_indikator/(:num)'] = 'C_updateIndikator/update_data_makro/$1
 $route['indikator'] = 'C_indikator/index';
 $route['show_data'] = 'C_indikator/show_data';
 
-$route['data_bps'] = 'C_indikator/data_bps';
-$route['detail_data'] = 'C_indikator/detail_data';
+$route['data_bps/(:num)'] = 'C_databps/index/$1';
+$route['data_kategori/(:num)'] = 'C_databps/data_kategori/$1';
+$route['detail_data'] = 'C_databps/detail_data';
 
 $route['fitur'] = 'C_fitur/index';
 $route['tambah_fitur'] = 'C_fitur/tambah_fitur';

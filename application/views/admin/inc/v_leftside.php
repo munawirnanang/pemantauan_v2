@@ -31,7 +31,7 @@
                     <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bar-chart-o"></i> <span> Indikator Makro </span> <span class="menu-arrow"></span></a>
                     <ul class="list-unstyled">
                         <li><a href="<?= base_url('indikator'); ?>">Pencapaian Indikator</a></li>
-                        <li><a href="<?= base_url('data_bps'); ?>">Data BPS</a></li>
+                        <li><a href="<?= base_url('data_bps/9999'); ?>">Data BPS</a></li>
                         <li><a href="ui-typography.html">Laporan Indikator</a></li>
                     </ul>
                 </li>

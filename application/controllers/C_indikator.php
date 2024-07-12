@@ -28,7 +28,118 @@ class C_indikator extends CI_Controller
         $data['wilayah'] = $this->db->get('wilayah')->result_array();
         $data['indikator'] = $this->db->get('indikator')->result_array();
         $data['tahun'] = $this->db->query('SELECT DISTINCT T.tahun FROM nilai_indikator T ORDER BY tahun DESC')->result_array();
-        // var_dump($data['wilayah']);
+        $data['max_overview'] = $this->db->query("SELECT
+                                                    NI.wilayah,NI.tahun, NI.periode, NI.id_indikator,NI.nilai, NI.nasional,NI.satuan,I.jenis, I.nama_indikator,W.nama_wilayah
+                                                FROM nilai_indikator NI
+                                                JOIN indikator I ON NI.id_indikator = I.id
+                                                JOIN wilayah W ON NI.wilayah = W.id
+                                                JOIN (SELECT NI1.id_indikator, MAX(NI1.tahun) AS max_tahun, MAX(NI1.periode) AS max_periode FROM nilai_indikator NI1 WHERE NI1.versi = (SELECT MAX(versi) FROM nilai_indikator) AND NI1.wilayah = '9999'AND NI1.nilai IS NOT NULL AND NI1.nasional IS NOT NULL GROUP BY NI1.id_indikator) max_data ON NI.id_indikator = max_data.id_indikator AND NI.tahun = max_data.max_tahun AND NI.periode = (SELECT MAX(NI2.periode) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI.id_indikator AND NI2.tahun = max_data.max_tahun AND NI2.nilai IS NOT NULL AND NI2.nasional IS NOT NULL)
+                                                WHERE
+                                                    NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                                                    AND NI.wilayah = '9999'
+                                                    AND NI.nilai IS NOT NULL
+                                                    AND NI.nasional IS NOT NULL")->result_array();
+        $data['min_overview'] = $this->db->query("SELECT
+                                                    NI.wilayah,NI.tahun, NI.periode, NI.id_indikator,NI.nilai, NI.nasional,NI.satuan,I.jenis, I.nama_indikator,W.nama_wilayah
+                                                FROM nilai_indikator NI
+                                                JOIN indikator I ON NI.id_indikator = I.id
+                                                JOIN wilayah W ON NI.wilayah = W.id
+                                                JOIN (SELECT NI1.id_indikator, MAX(NI1.tahun) - 1 AS max_tahun, MAX(NI1.periode) AS max_periode FROM nilai_indikator NI1 WHERE NI1.versi = (SELECT MAX(versi) FROM nilai_indikator) AND NI1.wilayah = '9999'AND NI1.nilai IS NOT NULL AND NI1.nasional IS NOT NULL GROUP BY NI1.id_indikator) max_data ON NI.id_indikator = max_data.id_indikator AND NI.tahun = max_data.max_tahun AND NI.periode = (SELECT MAX(NI2.periode) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI.id_indikator AND NI2.tahun = max_data.max_tahun AND NI2.nilai IS NOT NULL AND NI2.nasional IS NOT NULL)
+                                                WHERE
+                                                    NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                                                    AND NI.wilayah = '9999'
+                                                    AND NI.nilai IS NOT NULL
+                                                    AND NI.nasional IS NOT NULL")->result_array();
+                                                
+        $combinedData = array_merge($data['max_overview'],$data['min_overview']);
+        $combinedArray = [];
+
+        function getCombinedKey($item) {
+        return $item['wilayah'] . '_' . $item['id_indikator'];
+        }
+
+        // Iterate over the combined data
+        foreach ($combinedData as $item) {
+            $key = getCombinedKey($item);
+            if (!isset($combinedArray[$key])) {
+                $combinedArray[$key] = [
+                    "wilayah" => $item['wilayah'],
+                    "id_indikator" => $item['id_indikator'],
+                    "satuan" => $item['satuan'],
+                    "jenis" => $item['jenis'],
+                    "nama_indikator" => $item['nama_indikator'],
+                    "nama_wilayah" => $item['nama_wilayah'],
+                ];
+            }
+            // Add values dynamically based on year and periode
+            $tahun = $item['tahun'];
+            $periode = $item['periode'];
+
+            if (!isset($combinedArray[$key]['min_year']) || $tahun < $combinedArray[$key]['min_year']) {
+                $combinedArray[$key]['min_year'] = $tahun;
+                $combinedArray[$key]['periode_min_year'] = $periode;
+                $combinedArray[$key]["nilai_min_year"] = $item['nilai'];
+                $combinedArray[$key]["nasional_min_year"] = $item['nasional'];
+            } elseif ($tahun == $combinedArray[$key]['min_year']) {
+                $combinedArray[$key]['periode_min_year'] = $periode;
+                $combinedArray[$key]["nilai_min_year"] = $item['nilai'];
+                $combinedArray[$key]["nasional_min_year"] = $item['nasional'];
+            }
+
+            if (!isset($combinedArray[$key]['max_year']) || $tahun > $combinedArray[$key]['max_year']) {
+                $combinedArray[$key]['max_year'] = $tahun;
+                $combinedArray[$key]['periode_max_year'] = $periode;
+                $combinedArray[$key]["nilai_max_year"] = $item['nilai'];
+                $combinedArray[$key]["nasional_max_year"] = $item['nasional'];
+            } elseif ($tahun == $combinedArray[$key]['max_year']) {
+                $combinedArray[$key]['periode_max_year'] = $periode;
+                $combinedArray[$key]["nilai_max_year"] = $item['nilai'];
+                $combinedArray[$key]["nasional_max_year"] = $item['nasional'];
+            }
+        }
+
+        $combinedArray = array_values($combinedArray);
+
+        $data['html_card'] = '';
+
+        foreach($combinedArray as $item){
+            if($item['jenis']=='positif'){
+                if($item['nasional_max_year']>=$item['nasional_min_year']){
+                    $warna = '<div class="card-box widget-box-two widget-two-success">';
+                    $arrow = '<i class="mdi mdi-arrow-up text-success"></i>';
+                }else{
+                    $warna = '<div class="card-box widget-box-two widget-two-danger">';
+                    $arrow = '<i class="mdi mdi-arrow-down text-danger"></i>';
+                }
+            }else{
+                if($item['nasional_max_year']<=$item['nasional_min_year']){
+                    $warna = '<div class="card-box widget-box-two widget-two-success">';
+                    $arrow = '<i class="mdi mdi-arrow-down text-success"></i>';
+                }else{
+                    $warna = '<div class="card-box widget-box-two widget-two-danger">';
+                    $arrow = '<i class="mdi mdi-arrow-up text-danger"></i>';
+                }
+            }
+            $data['html_card'] .= '<div class="col-lg-6 col-md-6">';
+            $data['html_card'] .= $warna; 
+            // $data['html_card'] .= '<i class="mdi mdi-chart-areaspline widget-two-icon"></i>'; 
+            $data['html_card'] .= '<i class="widget-two-icon"><img src="'. base_url('assets').'/icon/'.strtolower(str_replace(' ', '_', $item['nama_indikator'])).'.png" alt="user-img" class="img-circle user-img" width="100%" height="100%"></i>'; 
+            $data['html_card'] .= '<div class="wigdet-two-content">'; 
+            $data['html_card'] .= '<p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Statistics">'.$item['nama_indikator'].'</p>'; 
+            $data['html_card'] .= '<h4>'.$item['nama_wilayah'].' ('.$item['max_year'].') : '.number_format((float)$item['nasional_max_year'],2,'.',',').'<small>'.$arrow.'</small></h4>'; 
+            $data['html_card'] .= '<p class="text-muted m-0"><b>'.$item['nama_wilayah'].' ('.$item['min_year'].') : '.number_format((float)$item['nasional_min_year'],2,'.',',').'</b></p>'; 
+            $data['html_card'] .= '</div>'; 
+            $data['html_card'] .= '</div>'; 
+            $data['html_card'] .= '</div>'; 
+        }
+    
+        
+        // Print the combined array
+        // echo '<pre>';
+        // print_r($combinedArray);
+        // echo '</pre>';
+        
+        // die;
         
         
         $this->load->view('admin/inc/v_header',$data);
@@ -37,7 +148,7 @@ class C_indikator extends CI_Controller
         $this->load->view('admin/main/v_table');
         $this->load->view('admin/inc/v_rightside');
         $this->load->view('admin/inc/v_footer');
-
+        
     }
 
     public function show_data()
@@ -105,6 +216,7 @@ class C_indikator extends CI_Controller
         $jenis = '';
         $query_tahun = (implode(",",$tahun));
         $query_indikator = (implode(",",$indikator));
+
         $onlyprovinsi = array_filter($resultArray, function($item) {
             return substr($item['wilayah'], -2) === "00";
         });
@@ -131,73 +243,15 @@ class C_indikator extends CI_Controller
                 }
                 $properties[$key][] = $item;
             }
-            foreach($properties as $key => $item){
-                for($o=0; $o<count($item);$o++){
-                    $lt = nama_provinsi($item[$o]['wilayah']);
-                    if ($item[$o]['wilayah'] == '3100' || $item[$o]['wilayah'] == '3400') {
-                        $jenis = 'Polygon';
-                    } else {
-                        $jenis = 'MultiPolygon';
-                    }
-                    $peta[$key][]=[
-                        "type" => "Feature",
-                        "id" => $item[$o]['wilayah'],
-                        "geometry" => array(
-                            "type" => $jenis,
-                            "coordinates" => $lt,
-                        ),
-                        "properties" => array(
-                            "kode"=> $item[$o]['wilayah'],
-                            "nama_wilayah" => $item[$o]['nama_wilayah'],
-                            "nama_indikator" => $item[$o]['nama_indikator'],
-                            "jenis" => $item[$o]['jenis'],
-                            "tahun" => $item[$o]['tahun'],
-                            "periode" => $item[$o]['periode'],
-                            "satuan" => $item[$o]['satuan'],
-                            "nasional" => (float) $item[$o]['nasional'],
-                            "nilai" => (float) $item[$o]['nilai'],
-                            "short_description" =>
-                                "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . $item[$o]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $item[$o]['nasional'],
-                            "description" =>
-                                "<table>
-                                    <tr>
-                                        <td colspan='2'>
-                                            <div id='nama_periode_provinsi'><strong>".$item[$o]['nama_wilayah']." Periode(". $item[$o]['tahun'].")</strong></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class='text' style='font-size: 14px;'><strong>Capaian :</strong></div> 
-                                        </td>
-                                        <td>
-                                                <div class='text' style='font-size: 14px;'>".(float) $item[$o]['nilai']."</div> 
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class='text' style='font-size: 14px;'><strong>Capaian Nasional:</strong></div> 
-                                        </td>
-                                        <td>
-                                                <div class='text' style='font-size: 14px;'>".$item[$o]['nasional']."</div> 
-                                        </td>
-                                    </tr>
-                                </table>"
-                        ),
-                    ];
-                    $nilai_peta[$key]=$peta[$key];
-                }
-            }
-
-        }
-        else
-        {
-            foreach ($onlyprovinsi as $item) {
+        }else{
+                foreach ($onlyprovinsi as $item) {
                 $key = "properties_{$item['id_indikator']}_{$item['tahun']}";
                 if (!isset($properties[$key])) {
                     $properties[$key] = array();
                 }
                 $properties[$key][] = $item;
             }
+        }
             foreach($properties as $key => $item){
                 for($o=0; $o<count($item);$o++){
                     $lt = nama_provinsi($item[$o]['wilayah']);
@@ -224,7 +278,7 @@ class C_indikator extends CI_Controller
                             "nasional" => (float) $item[$o]['nasional'],
                             "nilai" => (float) $item[$o]['nilai'],
                             "short_description" =>
-                                "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . $item[$o]['nilai']."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . $item[$o]['nasional'],
+                                "<strong style='padding: 0px;'>" . $item[$o]['nama_indikator'] . "</strong> (Periode : " .$item[$o]['periode']."-". $item[$o]['tahun'] . ")<hr style='margin: 2px;'/><b>Capaian " . $item[$o]['nama_wilayah'] . "</b> : " . number_format((float)$item[$o]['nilai'],2,'.',',')."<hr style='margin: 2px;'/><b>Capaian Nasional</b> : " . number_format((float)$item[$o]['nasional'],2,'.',','),
                             "description" =>
                                 "<table>
                                     <tr>
@@ -237,7 +291,7 @@ class C_indikator extends CI_Controller
                                             <div class='text' style='font-size: 14px;'><strong>Capaian :</strong></div> 
                                         </td>
                                         <td>
-                                                <div class='text' style='font-size: 14px;'>".(float) $item[$o]['nilai']."</div> 
+                                                <div class='text' style='font-size: 14px;'>".number_format((float)$item[$o]['nilai'],2,'.',',')."</div> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -245,7 +299,7 @@ class C_indikator extends CI_Controller
                                             <div class='text' style='font-size: 14px;'><strong>Capaian Nasional:</strong></div> 
                                         </td>
                                         <td>
-                                                <div class='text' style='font-size: 14px;'>".$item[$o]['nasional']."</div> 
+                                                <div class='text' style='font-size: 14px;'>".number_format((float)$item[$o]['nasional'],2,'.',',')."</div> 
                                         </td>
                                     </tr>
                                 </table>"
@@ -254,7 +308,6 @@ class C_indikator extends CI_Controller
                     $nilai_peta[$key]=$peta[$key];
                 }
             }
-        }
 
         $periodNames = [
             '00' => 'Tahunan',
@@ -350,7 +403,7 @@ class C_indikator extends CI_Controller
                                 break;
                             }
                         }
-                        $tabel_html .= '<td>'.$value.'</td>';
+                        $tabel_html .= '<td>'.number_format((float)$value,2,'.',',').'</td>';
                     }
                 }
             }
@@ -379,178 +432,5 @@ class C_indikator extends CI_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($data2));
 
         
-    }
-
-    public function data_bps()
-    {
-        $data['js']= 'assets/assets/js/js/indikator.js';
-        $data['judul'] = 'Indikator';
-        
-        $data['tabel'] = $this->db->get('data_bps')->result_array();
-
-        $this->load->view('admin/inc/v_header',$data);
-        $this->load->view('admin/inc/v_topbar');
-        $this->load->view('admin/inc/v_leftside');
-        $this->load->view('admin/main/v_data');
-        $this->load->view('admin/inc/v_rightside');
-        $this->load->view('admin/inc/v_footer');
-    }
-
-    public function update_data_bps()
-    {
-        $url1 = 'https://webapi.bps.go.id/v1/api/list/model/var/lang/ind/domain/0000/page/1/key/954d935f47f5ee473f310c6410aa304e/';
-
-        $this->curl->create($url1);
-        $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
-        $api1 = $this->curl->execute();
-        $response = json_decode($api1, true);
-
-        $item = $response['data'][0]['page'];
-        $jumlah = $response['data'][0]['pages']+1;
-
-        $data['tabel'] = [];
-        
-        for($i=1;$i<$jumlah;$i++){
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/var/lang/ind/domain/0000/page/'.$i.'/key/954d935f47f5ee473f310c6410aa304e/';
-            $this->curl->create($url);
-            $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
-            $api = $this->curl->execute();
-            $response = json_decode($api, true);
-            // $data['tabel'] = array_merge($data['tabel'], $response['data'][1]);
-            $data_raw = $response['data'][1];
-            foreach($data_raw as $data){
-                $push = [
-                    'id_api' => $data['var_id'],
-                    'judul' => $data['title'],
-                    'kategori' => $data['sub_name'],
-                    'sub_kategori' => $data['subcsa_name']
-                ];
-                $this->db->replace('data_bps', $push);
-            }
-        }
-    }
-    
-    public function detail_data()
-    {
-        try{
-
-            $id = $this->input->post('id');
-            
-            $keyapi = '954d935f47f5ee473f310c6410aa304e';
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/key/'.$keyapi;
-            // $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/534/turvar/1550/key/954d935f47f5ee473f310c6410aa304e';
-            $this->curl->create($url);
-            $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
-            $api = $this->curl->execute();
-    
-            $response = json_decode($api, true);
-
-            $idvariabel = $response['var'][0]['val'];
-            $baris = count($response['vervar']);
-            $karakter = count($response['turvar']);
-            $tahun = count($response['tahun']);
-            $bulan = count($response['turtahun']);
-            $title = $response['var'][0]['label'];
-
-            $html_table = '<div class="card-box table-responsive">';
-            $html_table .= '<table id="datatable-buttons" class="table table-striped table-bordered">';
-            $html_table .= '<thead>';
-                if($bulan==1 && $karakter==1){
-                    $html_table .= '<tr><th rowspan="3">' . $response['labelvervar'] . '</th></tr>';
-                    $html_table .= '<tr><th colspan="'.$tahun.'">'.$response['var'][0]['label'].'</th></tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $tahun; $i++) {
-                        $html_table .= '<th>' . $response['tahun'][$i]['label'] . '</th>';
-                    }
-                    $html_table .= '</tr>';
-                }elseif($bulan>1&&$karakter==1){
-                    $html_table .= '<tr><th rowspan="4">' . $response['labelvervar'] . '</th></tr>';
-                    $html_table .= '<tr><th colspan="' . ($tahun * $bulan) . '">' . $response['var'][0]['label'] . '</th></tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $tahun; $i++) {
-                        $html_table .= '<th colspan="' . $bulan . '">' . $response['tahun'][$i]['label'] . '</th>';
-                    }
-                    $html_table .= '</tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $tahun; $i++) {
-                        for ($j = 0; $j < $bulan; $j++) {
-                            $html_table .= '<th>' . $response['turtahun'][$j]['label'] . '</th>';
-                        }
-                    }
-                    $html_table .= '</tr>';
-                }elseif($bulan==1&&$karakter>1){
-                    $html_table .= '<tr><th rowspan="4">' . $response['labelvervar'] . '</th></tr>';
-                    $html_table .= '<tr><th colspan="' . ($karakter * $tahun) . '">' . $response['var'][0]['label'] . '</th></tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $karakter; $i++) {
-                        $html_table .= '<th colspan="' . $tahun . '">' . $response['turvar'][$i]['label'] . '</th>';
-                    }
-                    $html_table .= '</tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $karakter; $i++) {
-                        for ($j = 0; $j < $tahun; $j++) {
-                            $html_table .= '<th>' . $response['tahun'][$j]['label'] . '</th>';
-                        }
-                    }
-                    $html_table .= '</tr>';
-                }elseif($bulan>1&&$karakter>1){
-                    $html_table .= '<tr><th rowspan="5">' . $response['labelvervar'] . '</th></tr>';
-                    $html_table .= '<tr><th colspan="' . ($karakter * $tahun * $bulan) . '">' . $response['var'][0]['label'] . '</th></tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $karakter; $i++) {
-                        $html_table .= '<th colspan="' . ($bulan * $tahun) . '">' . $response['turvar'][$i]['label'] . '</th>';
-                    }
-                    $html_table .= '</tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $karakter; $i++) {
-                        for ($j = 0; $j < $tahun; $j++) {
-                            $html_table .= '<th colspan="' . $bulan . '">' . $response['tahun'][$j]['label'] . '</th>';
-                        }
-                    }
-                    $html_table .= '</tr>';
-                    $html_table .= '<tr>';
-                    for ($i = 0; $i < $karakter; $i++) {
-                        for ($j = 0; $j < $tahun; $j++) {
-                            for ($k = 0; $k < $bulan; $k++) {
-                                $html_table .= '<th>' . $response['turtahun'][$k]['label'] . '</th>';
-                            }
-                        }
-                    }
-                    $html_table .= '</tr>';
-                }
-            $html_table .= '</thead>';
-            $html_table .= '<tbody>';
-            for ($i = 0; $i < $baris; $i++) {
-                $html_table .= '<tr>';
-                $html_table .= '<td>' . $response['vervar'][$i]['label'] . '</td>';
-                for ($j = 0; $j < $karakter; $j++) {
-                    for ($k = 0; $k < $tahun; $k++) {
-                        for ($l = 0; $l < $bulan; $l++) {
-                            $id_data = $response['vervar'][$i]['val'] .
-                                $idvariabel .
-                                $response['turvar'][$j]['val'] .
-                                $response['tahun'][$k]['val'] .
-                                $response['turtahun'][$l]['val'];
-                            $data = isset($response['datacontent'][$id_data]) ? $response['datacontent'][$id_data] : "-";
-                            $html_table .= '<td>' . $data . '</td>';
-                        }
-                    }
-                }
-                $html_table .= '</tr>';
-            }
-            $html_table .= '</tbody>';
-
-            $html_table .= '</table>';
-
-            $html_table .= '<b>Sumber Data : Badan Pusat Statistik</b>';
-
-            $html_table .= '</div>';
-
-            $this->output->set_content_type('text/html')->set_output($html_table);
- 
-        } catch (Exception $e){
-            log_message('error: ',$e->getMessage());
-            return;
-        }        
     }
 }

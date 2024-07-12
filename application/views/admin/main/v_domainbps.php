@@ -5,23 +5,6 @@
     <!-- Start content -->
     <div class="content">
         <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="page-title-box">
-                        
-                        <h4 class="page-title"><?=$indikator?></h4>
-                        <ol class="breadcrumb p-0 m-0">
-                            <li>
-                                <a href="<?=base_url('data_bps/').$uri?>">Data Badan Pusat Statistik</a>
-                            </li>
-                            <li class="active">
-                                <?=$indikator?>
-                            </li>
-                        </ol>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
-            </div>                          
             <div class="row m-t-15">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs tabs-bordered">
@@ -41,25 +24,29 @@
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="data-b1">
-                            <h4 class="m-t-0 header-title m-b-15"><b>List Data</b></h4>
+                            <h4 class="m-t-0 header-title m-b-15"><b>List Data API BPS</b></h4>
                             <table id="datatable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>ID API</th>
                                         <th>Judul</th>
                                         <th>Kategori</th>
+                                        <th>Def</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $i = 1; ?>
-                                    <?php foreach($tabel as $t) : ?>
+                                    <?php $i= 1?>
+                                    <?php foreach($domain as $t) :?>
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td><a href="#" class="detail-link" data-id="<?= $t['var_id'] ?>" data-toggle="tab" data-target="#cari-b1"> <?= $t['title'] ?></a></td>
+                                            <td><?= $t['var_id'] ?></td>
+                                            <td><a href="#" class="detail-domain" data-id="<?= $t['var_id'] ?>" data-toggle="tab" data-target="#cari-b1"> <?= $t['title'] ?></a></td>
                                             <td><?= $t['sub_name'] ?></td>
+                                            <td><?= $t['def'] ?></td>
                                         </tr>
-                                        <?php $i++; ?>
-                                    <?php endforeach; ?>
+                                    <?php $i++ ?>
+                                    <?php endforeach ?>
                                 </tbody>
                             </table>
                         </div>

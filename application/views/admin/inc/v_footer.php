@@ -129,6 +129,18 @@
             resizeMap();
         }
     });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            if ($(e.target).attr('href') === '#home-b1') {
+                resizeMap();
+            }
+        });
+
+    $(document).ready(function() {
+        if ($('#home-b1').hasClass('active')) {
+            resizeMap();
+        }
+    });
 </script>
 
 <script>

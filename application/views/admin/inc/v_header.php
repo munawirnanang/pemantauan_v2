@@ -81,6 +81,10 @@
             width: 100%; 
             height: 100%; 
         }
+        #map2 { 
+            width: 100%; 
+            height: 100%; 
+        }
         .mapboxgl-popup {
         max-width: 400px;
         font:

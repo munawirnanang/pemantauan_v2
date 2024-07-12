@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    $(".hide-tab").hide();
+
     $('.detail-link').click(function(e) {
         e.preventDefault();
         var id = $(this).data('id');
@@ -17,7 +19,7 @@ $(document).ready(function() {
                     dom: 'Blfrtip',
                     lengthMenu: [10, 25, 50, 75, 100], // Options for number of entries per page
                     buttons: [
-                        'copy', 'excel', 'pdf', 'print'
+                        'excel', 'pdf', 'print'
                     ],
                 });
                 $('.nav-tabs a[href="#cari-b1"]').tab('show');
@@ -53,11 +55,32 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
+                $(".hide-tab").show();
+    
                 console.log(response)
                 const activeIndikator = Object.values(response.unique_indikator);
                 
                 const activeIdIndikator = formData.indikator.sort();
+                const activeTahun = formData.tahun.sort();
+
                 var inputIndikator = ["#indikator1", "#indikator2", "#indikator3", "#indikator4"];
+                var inputTahun = ["#tahun1", "#tahun2", "#tahun3", "#tahun4"];
+
+                if(activeTahun.length === 1){
+                    $('#tahunoption').hide();
+                    $('#divider1').hide();
+                    } else {
+                    $('#divider1').show();
+                    $('#tahunoption').show();
+                    for (var i = 0; i < inputTahun.length; i++) {
+                        if (i < activeTahun.length) {
+                            $(inputTahun[i]).text(activeTahun[i]).show();
+                            $(inputTahun[i]).val(activeTahun[i]);
+                        } else {
+                            $(inputTahun[i]).hide();
+                        }
+                    }
+                }
                 
                 if (activeIndikator.length === 1) {
                     $('#alloption').hide();
@@ -97,6 +120,7 @@ $(document).ready(function() {
                 slider.min = minYear;
                 slider.max = maxYear;
                 slider.value = minYear;
+                $('#idslider').hide();
 
                 
                 $('#selecttahun').text(minYear)
@@ -196,8 +220,14 @@ $(document).ready(function() {
                     zoom: 3.5 // starting zoom
                 });
 
+                // const map2 = new mapboxgl.Map({
+                //     container: 'map2', // container ID
+                //     style: 'mapbox://styles/mapbox/light-v10',
+                //     center: [118.206479, -1.990152], // starting position [lng, lat]
+                //     zoom: 3.5 // starting zoom
+                // });
+
                 let peta = geojsonData[defaultIndikator][minYear].features[0];
-                console.log(peta);
                 
                 const setColorSettings = (properties) => {
                     if (properties.jenis === 'positif') {
@@ -215,11 +245,11 @@ $(document).ready(function() {
 
                 $('#satuan').text('Satuan : '+peta.properties.satuan);
                 if(peta.properties.jenis === 'positif'){
-                    $('#keterangan1').text('<  Nasional Capaian Nasional : '+peta.properties.nasional);
-                    $('#keterangan2').text('>= Nasional Capaian Nasional : '+peta.properties.nasional);
+                    $('#keterangan1').text('<  Nasional Capaian Nasional : '+peta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
+                    $('#keterangan2').text('>= Nasional Capaian Nasional : '+peta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
                 }else{
-                    $('#keterangan1').text('>= Nasional Capaian Nasional : '+peta.properties.nasional);
-                    $('#keterangan2').text('<  Nasional Capaian Nasional : '+peta.properties.nasional);
+                    $('#keterangan1').text('>= Nasional Capaian Nasional : '+peta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
+                    $('#keterangan2').text('<  Nasional Capaian Nasional : '+peta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
                 }
             
                 const colorSettings = setColorSettings(peta.properties);
@@ -227,8 +257,71 @@ $(document).ready(function() {
                 map.addControl(new mapboxgl.FullscreenControl());
                 map.addControl(new mapboxgl.NavigationControl());
 
+                //GIS overview
+                // map2.on('load', () => {
+                //     map2.addSource('maine', {
+                //         'type': 'geojson',
+                //         'data': geojsonData[defaultIndikator][minYear]
+                //     });
+
+                //     map2.addLayer({
+                //         'id': 'states-layer',
+                //         'type': 'fill',
+                //         'source': 'maine', // reference the data source
+                //         'layout': {},
+                //         'paint': {
+                //             'fill-color': [
+                //                 'interpolate',
+                //                 ['linear'],
+                //                 ['get', 'nilai'],
+                //                 peta.properties.nasional - 0.0001,
+                //                 colorSettings.warna1,
+                //                 peta.properties.nasional,
+                //                 colorSettings.warna2,
+                //             ], 
+                //             'fill-opacity': [
+                //                 'case',
+                //                 ['boolean', ['feature-state', 'hover'], false],
+                //                 1,
+                //                 0.5
+                //             ],
+                //         }
+                //     });
+
+                //     map2.addLayer({
+                //         'id': 'outline',
+                //         'type': 'line',
+                //         'source': 'maine',
+                //         'layout': {},
+                //         'paint': {
+                //             'line-color': '#000',
+                //             'line-width': [
+                //                 'case',
+                //                 ['boolean', ['feature-state', 'click'], false],
+                //                 2,
+                //                 0.5
+                //             ]
+                //         }
+                //     });
+
+                //     const popup2 = new mapboxgl.Popup({
+                //         closeButton: false,
+                //         closeOnClick: false
+                //     });
+
+                //     map2.on('mouseenter', 'states-layer', (e) => {
+                //         popup2.setLngLat(e.lngLat).setHTML(e.features[0].properties.short_description).addTo(map2)
+                //     });
+
+                //     map2.on('mouseleave', 'states-layer', (e) => {
+                //         map2.getCanvas().style.cursor = '';
+                //         popup2.remove();
+                //     });
+
+                // });
+
+                //GIS maps
                 map.on('load', () => {
-                    // Add a data source containing GeoJSON data.
                     map.addSource('maine', {
                         'type': 'geojson',
                         'data': geojsonData[defaultIndikator][minYear]
@@ -276,12 +369,28 @@ $(document).ready(function() {
                         }
                     });
 
+                    $('button[name="tahun"]').click(function() {
+                        var btnTahun = $(this).val();
+                        var namaTahun = $(this).text();
+                        console.log('Button clicked:', namaTahun);
+                        
+                        if (btnTahun !== '-') {
+                            $('button[name="tahun"]').removeClass("btn-primary").addClass("btn-default");
+                            $(this).removeClass("btn-default").addClass("btn-primary");
+                        }
+                        slider.value=btnTahun;
+                        var event = new Event('input', {
+                            'bubbles': true,
+                            'cancelable': true
+                        });
+                        slider.dispatchEvent(event);
+                    })
+
 
                     if (activeIndikator.length === 1) {
                         slider.addEventListener('input', (e) => {
                             const year = e.target.value;
 
-                            console.log(geojsonData[defaultIndikator][year].features[0]);
                             const newPeta = geojsonData[defaultIndikator][year].features[0];
                             const newColorSettings = setColorSettings(newPeta.properties);
 
@@ -289,11 +398,11 @@ $(document).ready(function() {
                             
                             $('#selecttahun').text(year);
                             if(newPeta.properties.jenis === 'positif'){
-                                $('#keterangan1').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                                $('#keterangan2').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                                $('#keterangan1').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
+                                $('#keterangan2').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
                             }else{
-                                $('#keterangan1').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                                $('#keterangan2').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
+                                $('#keterangan1').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
+                                $('#keterangan2').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional.toLocaleString('en-US', {maximumFractionDigits:2}));
                             }
                                 map.setPaintProperty('states-layer', 'fill-color', [
                                     'interpolate',
@@ -362,35 +471,6 @@ $(document).ready(function() {
                             });
                         });    
                     }
-                    
-                    // slider.addEventListener('input', (e) => {
-                    //     const year = e.target.value;
-
-                    //     console.log(geojsonData[defaultIndikator][year].features[0]);
-                    //     const newPeta = geojsonData[defaultIndikator][year].features[0];
-                    //     const newColorSettings = setColorSettings(newPeta.properties);
-
-                    //     map.getSource('maine').setData(geojsonData[defaultIndikator][year]);
-                        
-                    //     $('#selecttahun').text(year);
-                    //     if(newPeta.properties.jenis === 'positif'){
-                    //         $('#keterangan1').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                    //         $('#keterangan2').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                    //     }else{
-                    //         $('#keterangan1').text('>= Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                    //         $('#keterangan2').text('<  Nasional Capaian Nasional : '+newPeta.properties.nasional);
-                    //     }
-
-                    //     map.setPaintProperty('states-layer', 'fill-color', [
-                    //         'interpolate',
-                    //         ['linear'],
-                    //         ['get', 'nilai'],
-                    //         newPeta.properties.nasional - 0.0001,
-                    //         newColorSettings.warna1,
-                    //         newPeta.properties.nasional,
-                    //         newColorSettings.warna2,
-                    //     ]);
-                    // });
 
                     const popup = new mapboxgl.Popup({
                         closeButton: false,
@@ -447,6 +527,7 @@ $(document).ready(function() {
 
                 function resizeMap() {
                     map.resize();
+                    // map2.resize();
                 }
                 
                 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -457,6 +538,18 @@ $(document).ready(function() {
 
                 $(document).ready(function() {
                     if ($('#maps-b1').hasClass('active')) {
+                        resizeMap();
+                    }
+                });
+                
+                $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                    if ($(e.target).attr('href') === '#home-b1') {
+                        resizeMap();
+                    }
+                });
+        
+                $(document).ready(function() {
+                    if ($('#home-b1').hasClass('active')) {
                         resizeMap();
                     }
                 });
