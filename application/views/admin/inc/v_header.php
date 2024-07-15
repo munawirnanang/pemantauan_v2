@@ -19,6 +19,9 @@
     <link href="<?= base_url('assets') ?>/plugins/jquery.filer/css/jquery.filer.css" rel="stylesheet" />
     <link href="<?= base_url('assets') ?>/plugins/jquery.filer/css/themes/jquery.filer-dragdropbox-theme.css" rel="stylesheet" />
 
+    <!-- Nestable css -->
+    <link href="<?= base_url('assets') ?>/plugins/nestable/jquery.nestable.css" rel="stylesheet" />
+
     <!-- App css -->
     <link href="<?= base_url('assets') ?>/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/core.css" rel="stylesheet" type="text/css" />
@@ -27,6 +30,7 @@
     <link href="<?= base_url('assets') ?>/assets/css/pages.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/menu.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/assets/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets') ?>/assets/css/spinner.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="<?= base_url('assets') ?>/plugins/switchery/switchery.min.css">
 
     <!-- bootstrap-select -->
@@ -43,11 +47,14 @@
     <link href="<?= base_url('assets') ?>/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/plugins/datatables/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
-
     <!-- Sweet Alert -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet"> -->
     <link href="<?= base_url('assets') ?>/plugins/sweetalert2/src/sweetalert2.scss" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('assets') ?>/plugins/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css" />
+
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 
     <!-- Sweet Alert -->
     <!-- <link href="<?= base_url('assets') ?>/plugins/bootstrap-sweetalert/sweet-alert.css" rel="stylesheet" type="text/css"> -->
@@ -63,10 +70,82 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
 
+    <style>
+        .dataTables_info {
+            position: absolute;
+        }
+    </style>
 
     <style>
         .selectcustom>button {
             border-radius: 25px;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 95%;
+            height: 95%;
+        }
+    </style>
+
+    <style>
+        #currpass {
+            display: flex;
+            border: 0.5px solid lightgrey;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+        #currpass:hover {
+            border: 1px solid black;
+        }
+
+        #newpass {
+            display: flex;
+            border: 0.5px solid lightgrey;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+        #newpass:hover {
+            border: 1px solid black;
+        }
+
+        #repnewpass {
+            display: flex;
+            border: 0.5px solid lightgrey;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+        #repnewpass:hover {
+            border: 1px solid black;
+        }
+    </style>
+
+    <style>
+        .dtr-data {
+            text-wrap: wrap;
+        }
+
+        #footDokumen>tr>.dt-control>.footer {
+            display: contents;
+        }
+
+        #footDokumen>tr>th>.footerAksi {
+            display: contents;
+        }
+    </style>
+
+    <style>
+        #example {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .dt-control {
+            border-right: transparent !important;
+            padding-top: 11px !important;
+            /* padding-right: 0px !important; */
         }
     </style>
 
@@ -78,6 +157,9 @@
 </head>
 
 <body class="fixed-left">
+    <div id="loading-animation" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+        <div class="loader"></div>
+    </div>
 
     <!-- Begin page -->
     <div id="wrapper">

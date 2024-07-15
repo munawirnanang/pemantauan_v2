@@ -22,18 +22,24 @@ class C_beranda extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-		$this->load->library('form_validation');
+        $this->load->library('form_validation');
         if (!$this->session->userdata('userid')) {
             redirect('');
         }
     }
     public function index()
     {
-        $this->load->view('admin/inc/v_header');
-        $this->load->view('admin/inc/v_topbar');
-        $this->load->view('admin/inc/v_leftside');
-        $this->load->view('admin/main/v_beranda');
-        $this->load->view('admin/inc/v_rightside');
-        $this->load->view('admin/inc/v_footer');
+        if ($this->session->userdata("id") != null) {
+            $data['judul'] = 'Beranda';
+
+            $this->load->view('admin/inc/v_header', $data);
+            $this->load->view('admin/inc/v_topbar');
+            $this->load->view('admin/inc/v_leftside');
+            $this->load->view('admin/main/v_beranda');
+            $this->load->view('admin/inc/v_rightside');
+            $this->load->view('admin/inc/v_footer');
+        } else {
+            redirect(base_url(''));
+        }
     }
 }

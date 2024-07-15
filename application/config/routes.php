@@ -53,28 +53,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $route['default_controller'] = 'C_auth/index';
 $route['login'] = 'C_auth/login';
 $route['logout'] = 'C_auth/logout';
+$route['forget_pass'] = 'C_auth/forget_pass';
+$route['forget'] = 'C_auth/forget';
 
 $route['beranda'] = 'C_beranda/index';
 
 $route['upload_indikator'] = 'C_uploadIndikator/index';
 
+$route['update_indikator'] = 'C_updateIndikator/index';
+$route['tambah_indikator'] = 'C_updateIndikator/tambah_indikator';
+$route['hapus_indikator'] = 'C_updateIndikator/hapus_indikator';
+$route['edit_indikator/(:num)'] = 'C_updateIndikator/edit_indikator/$1';
+$route['update_all_indikator'] = 'C_updateIndikator/update_all_data_makro';
+$route['update_data_indikator/(:num)'] = 'C_updateIndikator/update_data_makro/$1';
+
 $route['indikator'] = 'C_indikator/index';
+$route['show_data'] = 'C_indikator/show_data';
+
+$route['data_bps/(:num)'] = 'C_databps/index/$1';
+$route['data_kategori/(:num)'] = 'C_databps/data_kategori/$1';
+$route['detail_data'] = 'C_databps/detail_data';
+
+$route['repositori_dokumen'] = 'C_repositori_dokumen/index';
+$route['show_doc'] = 'C_repositori_dokumen/show_doc';
 
 $route['fitur'] = 'C_fitur/index';
+$route['list_fitur'] = 'C_fitur/list_fitur';
 $route['tambah_fitur'] = 'C_fitur/tambah_fitur';
 $route['hapus_fitur'] = 'C_fitur/hapus_fitur';
 $route['edit_fitur/(:num)'] = 'C_fitur/edit_fitur/$1';
+$route['ubah_fitur'] = 'C_fitur/ubah_fitur';
 
 $route['user'] = 'C_user/index';
+$route['list_user'] = 'C_user/list_user';
 $route['tambah_user'] = 'C_user/tambah_user';
 $route['hapus_user'] = 'C_user/hapus_user';
 $route['edit_user/(:num)'] = 'C_user/edit_user/$1';
+$route['ubah_user'] = 'C_user/ubah_user';
+$route['ubah_pass'] = 'C_user/ubah_pass';
+$route['get_user'] = 'C_user/get_user';
 
 $route['role'] = 'C_role/index';
+$route['list_role'] = 'C_role/list_role';
 $route['tambah_role'] = 'C_role/tambah_role';
 $route['update_role'] = 'C_role/update_role';
 $route['hapus_role'] = 'C_role/hapus_role';
 $route['edit_role/(:num)'] = 'C_role/edit_role/$1';
+$route['ubah_role'] = 'C_role/ubah_role';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
