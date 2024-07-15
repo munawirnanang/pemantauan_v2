@@ -10,12 +10,15 @@ $(document).ready(function() {
     $('.detail-link').click(function(e) {
         e.preventDefault();
         var id = $(this).data('id');
+        var uri = $(this).data('uri');
         
         $('#loading-animation').show();
         $.ajax({
             type: "POST",
             url: base_url+"detail_data",
-            data: { id: id },
+            data: { id: id,
+                    uri: uri
+             },
             success: function(response) {
                 $('#loading-animation').hide();
                 console.log(response);

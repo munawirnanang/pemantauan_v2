@@ -171,9 +171,15 @@ class C_databps extends CI_Controller
         try{
 
             $id = $this->input->post('id');
+            $uri = $this->input->post('uri');
+            
+            if($uri=='9999'){
+                $uri='0000';
+            }
+
             
             $keyapi = '954d935f47f5ee473f310c6410aa304e';
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/key/'.$keyapi;
+            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/'.$uri.'/var/'.$id.'/key/'.$keyapi;
             // $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/534/turvar/1550/key/954d935f47f5ee473f310c6410aa304e';
             $this->curl->create($url);
             $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds

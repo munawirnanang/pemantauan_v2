@@ -55,7 +55,7 @@
                                     <?php foreach($tabel as $t) : ?>
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td><a href="#" class="detail-link" data-id="<?= $t['var_id'] ?>" data-toggle="tab" data-target="#cari-b1"> <?= $t['title'] ?></a></td>
+                                            <td><a href="#" class="detail-link" data-id="<?= $t['var_id'] ?>" data-uri="<?= $uri ?>" data-toggle="tab" data-target="#cari-b1"> <?= $t['title'] ?></a></td>
                                             <td><?= $t['sub_name'] ?></td>
                                         </tr>
                                         <?php $i++; ?>
