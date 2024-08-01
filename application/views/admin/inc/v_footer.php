@@ -16,6 +16,8 @@
 <script src="<?= base_url('assets') ?>/assets/js/jquery.slimscroll.js"></script>
 <script src="<?= base_url('assets') ?>/assets/js/jquery.scrollTo.min.js"></script>
 <script src="<?= base_url('assets') ?>/plugins/switchery/switchery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <!-- Counter js  -->
 <script src="<?= base_url('assets') ?>/plugins/waypoints/jquery.waypoints.min.js"></script>

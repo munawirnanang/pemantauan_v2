@@ -97,6 +97,18 @@ $(document).ready(function() {
                           '</dd>' +
                       '</div>' +
                   '</div>' +
+                  '<div class="row" style="display: flex;">' +
+                      '<div class="col-4" style="width: 20%;">' +
+                          '<dt style="margin-left: 30px;">' +
+                              'Dokumen Terkait' +
+                          '</dt>' +
+                      '</div>' +
+                      '<div class="col-8" style="width: 80%;">' +
+                          '<dd>' +
+                              '-' +
+                          '</dd>' +
+                      '</div>' +
+                  '</div>' +
               '</dl>'
           );
       }
@@ -134,10 +146,14 @@ $(document).ready(function() {
               [5, 10, 25, 50, 100, 200, -1],
               [5, 10, 25, 50, 100, 200, "All"]
           ],
-          iDisplayLength: 10
+          iDisplayLength: 10,
+          drawCallback: function(settings) {
+              // Append icon to control column in each row
+              $('#example tbody tr').each(function() {
+                  $(this).find('td.dt-control').html('<i class="fa fa-plus-circle" style="float: right;"></i>');
+              });
+          }
       });
-
-      $('#example tbody .dt-control').append('<i class="fa fa-plus-circle" style="float: right;"></i>');
     
       // Add event listener for opening and closing details
       $('#example tbody').on('click', 'td.dt-control', function () {
@@ -182,5 +198,91 @@ $(document).ready(function() {
     });
   }
 
+    // $('.addToFolder').click(function() {
+    //     alert('Sukses');
+    // });
+
+    // $(".addToFolder").on('click', function() {
+    //     var id = $(this).data('id');
+    //     alert(id);
+    // });
+
+    // Use event delegation to handle dynamically created buttons
+    // $(document).on('click', '.addToFolder', function() {
+    //     var id = $(this).data('id');
+    //     addToFolder(id);
+    // });
+
+    // function addToFolder(id) {
+    //     alert("Document ID to add:");
+    //     // Your logic to add the document to the folder goes here
+    // }
 });
+
+$(document).ready(function() {
+    var link = base_url + "/count_doc_by_jenis"; // Base_url dari universal.js atau dari mana pun Anda mendapatkannya
+    $.ajax({  
+        url: link,  
+        type: 'GET',  
+        success: function(response) {  
+            var json = JSON.parse(response); // Tidak perlu parseJSON karena response sudah dalam format JSON
+            console.log(json[0].jenis);
+            console.log(typeof(json));
+
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Persentase jumlah dokumen berdasarkan jenis'
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                subtitle: {
+                    text:
+                    'Source:Dokumen PEPPD'
+                },
+                plotOptions: {
+                    series: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: [{
+                            enabled: true,
+                            distance: 10
+                        }, {
+                            enabled: true,
+                            distance: -20,
+                            format: '{point.percentage:.1f}%',
+                            style: {
+                                fontSize: '1.2em',
+                                textOutline: 'none',
+                                opacity: 0.7
+                            },
+                            filter: {
+                                operator: '>',
+                                property: 'percentage',
+                                value: 10
+                            }
+                        }]
+                    }
+                },
+                series: [
+                    {
+                        name: 'Jumlah',
+                        colorByPoint: true,
+                        data: json
+                    }
+                ]
+            });
+
+        },
+        error: function(err) { 
+            console.log(err);
+        }
+    });
+
+});
+
+
 

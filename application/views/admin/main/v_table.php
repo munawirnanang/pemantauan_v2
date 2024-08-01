@@ -88,7 +88,7 @@
                             
                         </div>
                         <div class="tab-pane" id="tabel-b1">
-                            <div class="card-box table-responsive">
+                            <!-- <div class="card-box table-responsive">
                                 <table id="tabel_indikator" class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
@@ -100,7 +100,7 @@
                                     <tbody>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="tab-pane" id="maps-b1" onclick="resizeMap()"> 
                             <div class="row">

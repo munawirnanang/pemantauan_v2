@@ -149,6 +149,12 @@
         }
     </style>
 
+    <style>
+        .DokumRekom:hover {
+            text-decoration: underline;
+        }
+    </style>
+
     <script>
         var base_url = "<?php echo base_url(); ?>";
     </script>

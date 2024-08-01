@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/WWW/pemantauan_arvin_v5/';
+$config['base_url'] = 'http://localhost/WWW/pemantauan_arvin_v7/';
 /*
 |--------------------------------------------------------------------------
 | Index File

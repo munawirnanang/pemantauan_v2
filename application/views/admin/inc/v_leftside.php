@@ -55,6 +55,12 @@
                             } ?>
                         <?php } ?>
                         <?php foreach ($this->session->userdata("fitur") as $fitur) { ?>
+                            <?php if ($fitur == 'SDGs') { ?>
+                                <li><a href="<?= base_url('sdgs'); ?>">SDGs</a></li>
+                            <?php break;
+                            } ?>
+                        <?php } ?>
+                        <?php foreach ($this->session->userdata("fitur") as $fitur) { ?>
                             <?php if ($fitur == 'Laporan Indikator') { ?>
                                 <li><a href="ui-typography.html">Laporan Indikator</a></li>
                             <?php break;
@@ -67,6 +73,15 @@
                     <?php if ($fitur == 'Repositori Dokumen') { ?>
                         <li>
                             <a href="<?= base_url('repositori_dokumen'); ?>" class="waves-effect"><i class="fa fa-book"></i><span> Repositori Dokumen </span></a>
+                        </li>
+                    <?php break;
+                    } ?>
+                <?php } ?>
+
+                <?php foreach ($this->session->userdata("fitur") as $fitur) { ?>
+                    <?php if ($fitur == 'Innovation Hub') { ?>
+                        <li>
+                            <a href="<?= base_url('innovation_hub'); ?>" class="waves-effect"><i class="fa fa-diamond"></i><span> Innovation Hub </span></a>
                         </li>
                     <?php break;
                     } ?>

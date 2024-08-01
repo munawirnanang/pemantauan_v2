@@ -2,6 +2,7 @@
  * common properties
  */
 
+
 var base_url    = window.location.origin + '/';
     base_url   += "WWW/pemantauan_arvin_v5/";
 
@@ -173,3 +174,97 @@ var base_url    = window.location.origin + '/';
           iconRepeatNewPass.classList.add("fa-eye");
         }
     }
+
+    function addToFolder(id) {
+
+        // Your logic to add the document to the folder goes here
+        // alert("Document ID to add: " + id);
+
+        if($("#download-"+id).hasClass("addFile")){
+            $("#download-"+id).html("Ditambahkan");
+            $("#download-"+id).removeClass("btn-inverse");
+            $("#download-"+id).addClass("btn-teal");
+            $("#download-"+id).removeClass("addFile");
+            $("#download-"+id).addClass("addedFile");
+            cartFile('add', id);
+        }else{
+            $("#download-"+id).html("Tambah Ke Folder");
+            $("#download-"+id).addClass("btn-inverse");
+            $("#download-"+id).removeClass("btn-teal");
+            $("#download-"+id).addClass("addFile");
+            $("#download-"+id).removeClass("addedFile");
+            cartFile('remove', id);
+        }
+
+    }
+
+    var cart = [];
+    function cartFile(param ,id) {
+        if (param == 'add') {
+            cart.push(id);
+            // alert(cart+' (count : '+cart.length+')');
+            $(".folderFile").html(cart.length);
+            $(".btnUnduhDok").attr("data-dokumen", cart);
+        }else if (param == 'remove') {
+            var removeItem = id;
+            cart = jQuery.grep(cart, function(value) {
+                return value != removeItem;
+            });
+            // alert(cart+' (count : '+cart.length+')');
+            $(".folderFile").html(cart.length);
+            $(".btnUnduhDok").attr("data-dokumen", cart);
+        }
+    }
+
+    $(".btnUnduhDok").on('click', function() {
+        $('.icon').append('<i class="fa fa-spin fa-refresh refreshIcon"></i>');
+        var dataValue = $(this).attr('data-dokumen');
+        var dataArray = dataValue.split(',');
+        var link = base_url + "/show_doc"; // base_url from universal.js
+        var dokumenArray = [];
+        
+        $.get(link, function(data) {
+            var json = $.parseJSON(data);
+            var num = 0;
+            while (num < dataArray.length) {
+                var num2 = 0;
+                while (num2 < json.length) {
+                    if (dataArray[num] == json[num2].id) {
+                        dokumenArray.push({
+                            dokName: json[num2].DokName,
+                            link: json[num2].link
+                        });
+                        num2 = json.length; // Exit inner loop
+                    }
+                    num2++;
+                }
+                num++;
+            }
+    
+            // Convert dokumenArray to a JSON string
+            var dokumenArrayJson = JSON.stringify(dokumenArray);
+    
+            // Create a form and submit it
+            var form = document.createElement("form");
+            form.style.display = "none";
+            form.method = "POST";
+            form.action = base_url + "zipDok/";
+    
+            // Hidden input for JSON data
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "dokumenArray";
+            input.value = dokumenArrayJson;
+    
+            form.appendChild(input);
+            document.body.appendChild(form);
+    
+            form.submit();
+            $('.refreshIcon').remove();
+        })
+        .fail(function() {
+            alert("Error retrieving document data.");
+        });
+    });
+    
+    

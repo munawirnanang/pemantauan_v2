@@ -8,20 +8,20 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="page-title-box">
-
-                        <h4 class="page-title"><?= $indikator ?></h4>
+                        
+                        <h4 class="page-title"><?=$indikator?></h4>
                         <ol class="breadcrumb p-0 m-0">
                             <li>
-                                <a href="<?= base_url('data_bps/') . $uri ?>">Data Badan Pusat Statistik</a>
+                                <a href="<?=base_url('data_bps/').$uri?>">Data Badan Pusat Statistik</a>
                             </li>
                             <li class="active">
-                                <?= $indikator ?>
+                                <?=$indikator?>
                             </li>
                         </ol>
                         <div class="clearfix"></div>
                     </div>
                 </div>
-            </div>
+            </div>                          
             <div class="row m-t-15">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs tabs-bordered">
@@ -52,10 +52,10 @@
                                 </thead>
                                 <tbody>
                                     <?php $i = 1; ?>
-                                    <?php foreach ($tabel as $t) : ?>
+                                    <?php foreach($tabel as $t) : ?>
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td><a href="#" class="detail-link" data-id="<?= $t['var_id'] ?>" data-uri="<?= $uri ?>" data-toggle="tab" data-target="#cari-b1"> <?= $t['title'] ?></a></td>
+                                            <td><a href="<?= base_url() ?>detail_data?id=<?= $t['var_id'] ?>&id_kategori=<?=$segment?>&uri=<?= $uri ?>" class="detail-link" data-toggle="tab" data-target="#cari-b1"><?= $t['title'] ?></a></td>
                                             <td><?= $t['sub_name'] ?></td>
                                         </tr>
                                         <?php $i++; ?>
@@ -78,7 +78,7 @@
 
 </div>
 <script>
-
+   
 </script>
 
 
