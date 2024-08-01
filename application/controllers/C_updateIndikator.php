@@ -31,13 +31,10 @@ class C_updateIndikator extends CI_Controller
      public function index()
     {
         $data['judul'] = 'Upload Indikator';
-        $data['id_bps'] = $this->db->get('data_bps')->result_array();
         $data['js']= 'assets/assets/js/js/updateindikator.js';
 
-        // $data['indikator'] = $this->db->get('indikator')->result_array();
-        $data['indikator'] = $this->db->query('SELECT I.*,COUNT(DISTINCT(NI.tahun)) AS jumlah_tahun, COUNT(DISTINCT(NI.wilayah)) AS jumlah_wilayah, COUNT(DISTINCT(NI.periode)) AS jumlah_periode, COUNT(NI.id) AS jumlah_data, min(NI.tahun) AS tahunawal, max(NI.tahun) AS tahunakhir FROM indikator I LEFT JOIN nilai_indikator NI ON I.id=NI.id_indikator GROUP BY I.id')->result_array();
+        $data['indikator'] = $this->db->query('SELECT I.*,COUNT(DISTINCT(NI.tahun)) AS jumlah_tahun, COUNT(DISTINCT(NI.wilayah)) AS jumlah_wilayah, COUNT(DISTINCT(NI.periode)) AS jumlah_periode, COUNT(NI.id) AS jumlah_data, min(NI.tahun) AS tahunawal, max(NI.tahun) AS tahunakhir FROM indikator I LEFT JOIN nilai_indikator NI ON I.id=NI.id_indikator WHERE I.bps="1" GROUP BY I.id')->result_array();
         
-
         $this->load->view('admin/inc/v_header',$data);
         $this->load->view('admin/inc/v_topbar');
         $this->load->view('admin/inc/v_leftside');
@@ -50,6 +47,7 @@ class C_updateIndikator extends CI_Controller
     {
         $id=$this->input->post('id');
         $id_api=$this->input->post('id_bps');
+        $id_turvar=$this->input->post('id_turvar');
         $group_id=$this->input->post('group_id');
         $nama_indikator=$this->input->post('nama_indikator');
         $nama_tabel=$this->input->post('nama_tabel');
@@ -79,6 +77,7 @@ class C_updateIndikator extends CI_Controller
             $data_indikator=[
                 'id' => $id,
                 'id_api' => $id_api,
+                'id_turvar' => $id_turvar,
                 'group_id' => $group_id,
                 'nama_indikator' => $nama_indikator,
                 'nama_tabel' => $nama_tabel,
@@ -88,6 +87,7 @@ class C_updateIndikator extends CI_Controller
                 'satuan' => $satuan,
                 'urutan' => $urutan,
                 'ppd' => $ppd,
+                'bps' => '1',
                 'deskripsi' => $deskripsi,
             ];
             $this->db->insert('indikator',$data_indikator);
@@ -97,6 +97,16 @@ class C_updateIndikator extends CI_Controller
         }
     }
 
+    public function test()
+    {
+        $keyapi = '954d935f47f5ee473f310c6410aa304e';
+        $url = 'https://webapi.bps.go.id/v1/api/view/domain/0000/model/statictable/lang/ind/id/1007/key/954d935f47f5ee473f310c6410aa304e';
+        $this->curl->create($url);
+        $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
+        $api = $this->curl->execute();
+        $response = json_decode($api, true);
+        echo htmlspecialchars_decode($response['data']['table']);
+    }
     public function update_all_data_makro()
     {
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
@@ -107,26 +117,17 @@ class C_updateIndikator extends CI_Controller
         if($countdata){
             $this->db->truncate('nilai_indikator');
         }
-        
+
         foreach($list_indikator as $key){
-            if($key['id_api']=='98'){
-                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turvar/191/key/'.$keyapi;
-            }elseif($key['id_api']=='534'){
-                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turth/35/turvar/1550/key/'.$keyapi;
-            }elseif($key['id_api']=='533'){
-                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turth/35/turvar/1550/key/'.$keyapi;
-            }elseif($key['id_api']=='192'){
-                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turvar/434/key/'.$keyapi;
-            }else{
-                $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/key/'.$keyapi;
-            }
+            
+            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$key['id_api'].'/turvar/'.$key['id_turvar'].'/key/'.$keyapi;
+            
             $id_indikator = $key['id'];
 
             $this->curl->create($url);
             $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
             $api = $this->curl->execute();
 
-            $data['api'] = json_decode($api, true);
             $response = json_decode($api, true);
 
             $idvariabel = $response['var'][0]['val'];
@@ -136,7 +137,6 @@ class C_updateIndikator extends CI_Controller
             if($satuan=='persen'){
                 $satuan='%';
             }
-
 
             $baris = count($response['vervar']);
             $karakter = count($response['turvar']);
@@ -190,20 +190,19 @@ class C_updateIndikator extends CI_Controller
     public function update_data_makro($id)
     {
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
-        $id_indikator = $this->db->query("SELECT id FROM indikator i WHERE i.id_api=$id")->row_array();
+        $id_indikator = $this->db->query("SELECT id,id_api,id_turvar FROM indikator i WHERE i.id_api=$id")->row_array();
         
-        if($id=='98'){
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turvar/191/key/'.$keyapi;
-        }elseif($id=='534'){
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turth/35/turvar/1550/key/'.$keyapi;
-        }elseif($id=='533'){
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turth/35/turvar/1550/key/'.$keyapi;
-        }elseif($id=='192'){
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/turvar/434/key/'.$keyapi;
-        }else{
-            $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id.'/key/'.$keyapi;
-        }
+        $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id_indikator['id_api'].'/turvar/'.$id_indikator['id_turvar'].'/key/'.$keyapi;
+            
         $id_indikator = $id_indikator['id'];
+        
+        $data = $this->db->get_where('nilai_indikator',['id_indikator'=>$id_indikator])->result_array();
+        $countdata = count($data);
+        
+        if($countdata){
+            $this->db->where('id_indikator',$id_indikator);
+            $this->db->delete('nilai_indikator');
+        }
 
         $this->curl->create($url);
         $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
@@ -273,6 +272,20 @@ class C_updateIndikator extends CI_Controller
         }
         $this->session->set_flashdata('flash', 'diperbaharui');
     }
+    public function reset_indikator($id)
+    {
+        $id_indikator = $this->db->query("SELECT id FROM indikator i WHERE i.id_api=$id")->row_array();
+        
+        $id_indikator = $id_indikator['id'];
+
+        $data = $this->db->get_where('nilai_indikator',['id_indikator'=>$id_indikator])->result_array();
+        $countdata = count($data);
+        
+        if($countdata){
+            $this->db->where('id_indikator',$id_indikator);
+            $this->db->delete('nilai_indikator');
+        }
+    }
     public function hapus_indikator()
     {
         $id_indikator = $this->input->post('id');
@@ -284,6 +297,7 @@ class C_updateIndikator extends CI_Controller
     {
         $new_id=$this->input->post('id_edit');
         $id_api=$this->input->post('id_bps_edit');
+        $id_turvar=$this->input->post('id_turvar_edit');
         $group_id=$this->input->post('group_id_edit');
         $nama_indikator=$this->input->post('nama_indikator_edit');
         $nama_tabel=$this->input->post('nama_tabel_edit');
@@ -318,6 +332,8 @@ class C_updateIndikator extends CI_Controller
             }
             $this->db->set('group_id',$group_id);
             $this->db->set('nama_indikator',$nama_indikator);
+            $this->db->set('id_api',$id_api);
+            $this->db->set('id_turvar',$id_turvar);
             $this->db->set('nama_tabel',$nama_tabel);
             $this->db->set('jenis',$jenis);
             $this->db->set('chart',$chart);
@@ -325,6 +341,7 @@ class C_updateIndikator extends CI_Controller
             $this->db->set('satuan',$satuan);
             $this->db->set('urutan',$urutan);
             $this->db->set('ppd',$ppd);
+            $this->db->set('bps','1');
             $this->db->set('deskripsi',$deskripsi);
             $this->db->where('id',$id);
             $this->db->update('indikator');

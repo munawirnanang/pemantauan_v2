@@ -32,6 +32,7 @@
                     <ul class="list-unstyled">
                         <li><a href="<?= base_url('indikator'); ?>">Pencapaian Indikator</a></li>
                         <li><a href="<?= base_url('data_bps/9999'); ?>">Data BPS</a></li>
+                        <li><a href="<?= base_url('sdgs'); ?>">Data SDGs</a></li>
                         <li><a href="ui-typography.html">Laporan Indikator</a></li>
                     </ul>
                 </li>

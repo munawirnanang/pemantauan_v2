@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class C_indikator extends CI_Controller
 {
     public function __construct()
@@ -169,37 +173,39 @@ class C_indikator extends CI_Controller
         $resultArray = array();
         
         
-        for ($i = 0; $i < count($indikator); $i++) {
-            for ($w = 0; $w < count($wilayah); $w++) {
-                for ($t = 0; $t < count($tahun); $t++) {
+        for ($i = 0; $i < count($indikator); $i++) 
+        {
+            for ($w = 0; $w < count($wilayah); $w++) 
+            {
+                for ($t = 0; $t < count($tahun); $t++) 
+                {
+                    $dataindikator = $this->db->query(
+                        "SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,NI.nilai,I.nama_indikator,W.nama_wilayah
+                        FROM nilai_indikator NI 
+                        JOIN indikator I ON NI.id_indikator=I.id
+                        JOIN wilayah W ON NI.wilayah=W.id
+                        WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                        AND NI.id_indikator=$indikator[$i]
+                        AND NI.wilayah='$wilayah[$w]'
+                        AND NI.tahun='$tahun[$t]'")->result_array();    
+                        
 
-                        $dataindikator = $this->db->query(
-                            "SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,NI.nilai,I.nama_indikator,W.nama_wilayah
-                            FROM nilai_indikator NI 
-                            JOIN indikator I ON NI.id_indikator=I.id
-                            JOIN wilayah W ON NI.wilayah=W.id
-                            WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-                            AND NI.id_indikator=$indikator[$i]
-                            AND NI.wilayah='$wilayah[$w]'
-                            AND NI.tahun='$tahun[$t]'")->result_array();    
-                            
+                    if (!$dataindikator) {
+                        $nama_indikator = $this->db->query(
+                            "SELECT nama_indikator FROM indikator WHERE id = $indikator[$i]")->row()->nama_indikator;
+                        $nama_wilayah = $this->db->query(
+                            "SELECT nama_wilayah FROM wilayah WHERE id = '$wilayah[$w]'")->row()->nama_wilayah;
 
-                        if (!$dataindikator) {
-                            $nama_indikator = $this->db->query(
-                                "SELECT nama_indikator FROM indikator WHERE id = $indikator[$i]")->row()->nama_indikator;
-                            $nama_wilayah = $this->db->query(
-                                "SELECT nama_wilayah FROM wilayah WHERE id = '$wilayah[$w]'")->row()->nama_wilayah;
-
-                            $dataindikator[0] = [
-                                'wilayah' => $wilayah[$w],
-                                'tahun' => $tahun[$t],
-                                'periode' => '00',
-                                'id_indikator' => $indikator[$i],
-                                'nilai' => null,
-                                'nama_indikator' => $nama_indikator,
-                                'nama_wilayah' => $nama_wilayah     
-                            ];
-                        }
+                        $dataindikator[0] = [
+                            'wilayah' => $wilayah[$w],
+                            'tahun' => $tahun[$t],
+                            'periode' => '00',
+                            'id_indikator' => $indikator[$i],
+                            'nilai' => null,
+                            'nama_indikator' => $nama_indikator,
+                            'nama_wilayah' => $nama_wilayah     
+                        ];
+                    }
                     
                     foreach($dataindikator as $data){
                         $resultArray[] = $data;
@@ -332,8 +338,11 @@ class C_indikator extends CI_Controller
         sort($unique_years);
         sort($unique_periods);
         
-        $tabel_html = '<table id="tabel_indikator" class="table table-bordered table-striped"><thead>';
-        $tabel_html = '<thead>';
+        $tabel_html .= '<div class="card-box table-responsive m-t-15">';
+        $tabel_html .= '<form method="POST" id="convert_form" action="'.base_url('c_indikator/export').'">';
+        $tabel_html .= '<button type="button" name="convert" id="convert" class="btn btn-primary m-b-15 pull-right m-l-15">Export Excel</button>';
+        $tabel_html .= '<table id="tabel_indikator" class="table table-bordered table-striped"><thead>';
+        $tabel_html .= '<thead>';
         $tabel_html .= '<tr>';
         $tabel_html .= '<th rowspan="3">Provinsi/Kabupaten/Kota</th>';
         
@@ -412,6 +421,9 @@ class C_indikator extends CI_Controller
         }
         $tabel_html .= '</tbody>';
         $tabel_html .= '</table>';
+        $tabel_html .= '<input type="hidden" name="file_content" id="file_content" />';
+        $tabel_html .= '</form>';
+        $tabel_html .= '</div>';
 
         foreach($unique_years as $ui){
             foreach($unique_periods as $up){
@@ -432,5 +444,56 @@ class C_indikator extends CI_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($data2));
 
         
+    }
+    public function export()
+    {
+
+        $file_content = $this->input->post('file_content');
+
+        if (isset($file_content)) {
+            // Define the temporary HTML directory
+            $temporary_html_dir = './tmp_html/';
+            
+            // Check if the directory exists, if not create it
+            if (!is_dir($temporary_html_dir)) {
+                mkdir($temporary_html_dir, 0777, true);
+            }
+
+            // Create a temporary HTML file
+            $temporary_html_file = $temporary_html_dir . time() . '.html';
+
+            // Write the file content to the temporary HTML file
+            file_put_contents($temporary_html_file, $file_content);
+
+            // Create a reader for HTML
+            $reader = IOFactory::createReader('Html');
+
+            // Load the HTML file into a spreadsheet
+            $spreadsheet = $reader->load($temporary_html_file);
+
+            // Create a writer for Excel format (Xlsx)
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+            // Define the filename
+            $filename = time() . '.xlsx';
+
+            // Save the Excel file
+            $writer->save($filename);
+
+            // Set headers to force download
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Transfer-Encoding: Binary');
+            header("Content-disposition: attachment; filename=\"" . $filename . "\"");
+
+            // Read the file content and output it
+            readfile($filename);
+
+            // Clean up: remove the temporary files
+            unlink($temporary_html_file);
+            unlink($filename);
+
+            // Exit to ensure no further output is sent
+            exit;
+        }
     }
 }

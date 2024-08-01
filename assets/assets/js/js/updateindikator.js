@@ -23,6 +23,29 @@ $(document).ready(function() {
         })
 
     });
+    $('.undo-btn').click(function() {
+        var id = $(this).data('api');
+        var nama = $(this).data('nama');
+        
+        $('#loading-animation').show();
+        console.log(id)
+        console.log(nama)
+        $.ajax({
+            url: base_url+'reset_data_indikator/'+id,
+            method: 'POST',
+            success: function(data){
+                console.log(data);
+                $('#loading-animation').hide();
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                
+                $('#loading-animation').hide();
+              }
+        })
+
+    });
 });
 $(document).ready(function() {
     $('.edit-btn').click(function() {
@@ -30,6 +53,7 @@ $(document).ready(function() {
         console.log(constraint);
         var id = $(this).data('id');
         var api = $(this).data('api');
+        var turvar = $(this).data('turvar');
         var group = $(this).data('group');
         var nama = $(this).data('nama');
         var tabel = $(this).data('tabel');
@@ -48,6 +72,7 @@ $(document).ready(function() {
         
         $('#id_edit').val(id);
         $('#id_bps_edit').val(api);
+        $('#id_turvar_edit').val(turvar);
         $('#group_id_edit').val(group);
         $('#nama_indikator_edit').val(nama);
         $('#nama_tabel_edit').val(tabel);

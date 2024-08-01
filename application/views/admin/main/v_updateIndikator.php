@@ -41,11 +41,15 @@
                                                 <label for="id_bps" class="control-label">API ID</label>
                                                 <input type="text" class="form-control" id="id_bps" name="id_bps" placeholder="1" required>
                                                 <?= form_error('id_bps', '<small class="text-danger pl-3">', '</small>') ?>
-                                                <!-- <select class="selectpicker show-tick" name="id_bps" data-live-search="true" data-style="btn-default">
-                                                    <?php foreach ($id_bps as $f) : ?>
-                                                        <option value="<?= $f['id_api'] ?>" data-content="<?= strlen($f['judul']) > 120 ? substr($f['judul'], 0, 120) . '...' : $f['judul'] ?>"><?= $f['judul'] ?></option>
-                                                    <?php endforeach ?>
-                                                </select> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="id_turvar" class="control-label">Turvar API ID</label>
+                                                <input type="text" class="form-control" id="id_turvar" name="id_turvar" placeholder="1" required>
+                                                <?= form_error('id_turvar', '<small class="text-danger pl-3">', '</small>') ?>
                                             </div>
                                         </div>
                                     </div>
@@ -166,6 +170,9 @@
                             <th>
                                 <center>BPS API ID</center>
                             </th>
+                            <th>
+                                <center>Turvar API ID</center>
+                            </th>
                             <!-- <th>
                                 <center>Group ID</center>
                             </th> -->
@@ -214,8 +221,10 @@
                             }
                         ?>
                             <tr>
+                                <!-- <td><?= $i ?></td> -->
                                 <td><?= $u['id'] ?></td>
                                 <td><?= $u['id_api'] ?></td>
+                                <td><?= $u['id_turvar'] ?></td>
                                 <td><?= $u['nama_indikator'] ?></td>
                                 <td><?= $u['nama_tabel'] ?></td>
                                 <td><?= $u['jenis'] ?></td>
@@ -228,8 +237,9 @@
                                     <span class="label label-success">Total: <?= $u['jumlah_data'] ?></span>
                                 </td>
                                 <td>    
+                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-info m-b-5 undo-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-undo"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-success m-b-5 refresh-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-refresh"></i></button>
-                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-warning m-b-5 edit-btn" id="edit"  data-toggle="modal" data-constraint="<?= $constraint ?>" data-id="<?= $u['id']?>" data-api="<?= $u['id_api']?>" data-group="<?= $u['group_id']?>" data-nama="<?= $u['nama_indikator']?>" data-tabel="<?= $u['nama_tabel']?>" data-jenis="<?= $u['jenis']?>" data-chart="<?= $u['chart']?>" data-link="<?= $u['link']?>" data-satuan="<?= $u['satuan']?>" data-urutan="<?= $u['urutan']?>" data-ppd="<?= $u['ppd']?>" data-deskripsi="<?= $u['deskripsi']?>" data-target="#modal-edit"><i class="fa fa-pencil-square-o"></i></button>
+                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-warning m-b-5 edit-btn" id="edit"  data-toggle="modal" data-constraint="<?= $constraint ?>" data-id="<?= $u['id']?>" data-api="<?= $u['id_api']?>" data-turvar="<?= $u['id_turvar']?>" data-group="<?= $u['group_id']?>" data-nama="<?= $u['nama_indikator']?>" data-tabel="<?= $u['nama_tabel']?>" data-jenis="<?= $u['jenis']?>" data-chart="<?= $u['chart']?>" data-link="<?= $u['link']?>" data-satuan="<?= $u['satuan']?>" data-urutan="<?= $u['urutan']?>" data-ppd="<?= $u['ppd']?>" data-deskripsi="<?= $u['deskripsi']?>" data-target="#modal-edit"><i class="fa fa-pencil-square-o"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-danger m-b-5" action="hapus_indikator" name="hapus" id="hapus" name="hapus" nama-hapus="<?= $u['nama_indikator']?>" id-hapus="<?= $u['id']?>"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
@@ -276,11 +286,15 @@
                                 <label for="id_bps" class="control-label">API ID</label>
                                 <input type="text" class="form-control" id="id_bps_edit" name="id_bps_edit" placeholder="1" required>
                                 <?= form_error('id_bps_edit', '<small class="text-danger pl-3">', '</small>') ?>
-                                <!-- <select class="selectpicker show-tick" name="id_bps" data-live-search="true" data-style="btn-default">
-                                    <?php foreach ($id_bps as $f) : ?>
-                                        <option value="<?= $f['id_api'] ?>" data-content="<?= strlen($f['judul']) > 120 ? substr($f['judul'], 0, 120) . '...' : $f['judul'] ?>"><?= $f['judul'] ?></option>
-                                    <?php endforeach ?>
-                                </select> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_turvar" class="control-label">Turvar API ID</label>
+                                <input type="text" class="form-control" id="id_turvar_edit" name="id_turvar_edit" placeholder="1" required>
+                                <?= form_error('id_turvar_edit', '<small class="text-danger pl-3">', '</small>') ?>
                             </div>
                         </div>
                     </div>

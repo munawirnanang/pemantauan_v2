@@ -1,37 +1,6 @@
 $(document).ready(function() {
     $(".hide-tab").hide();
 
-    $('.detail-link').click(function(e) {
-        e.preventDefault();
-        var id = $(this).data('id');
-        
-        $('#loading-animation').show();
-        $.ajax({
-            type: "POST",
-            url: base_url+"detail_data",
-            data: { id: id },
-            success: function(response) {
-                
-                $('#loading-animation').hide();
-                console.log(response);
-                $('#cari-b1').html(response);
-                $('#datatable-buttons').DataTable({
-                    dom: 'Blfrtip',
-                    lengthMenu: [10, 25, 50, 75, 100], // Options for number of entries per page
-                    buttons: [
-                        'excel', 'pdf', 'print'
-                    ],
-                });
-                $('.nav-tabs a[href="#cari-b1"]').tab('show');
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                
-                $('#loading-animation').hide();
-            }
-        });
-    });
-
     // form_handler.js
     $('.btn-submit').click(function(event) {
         event.preventDefault();
@@ -203,7 +172,15 @@ $(document).ready(function() {
                     htmlChart ='';
                 }
 
-                $('#tabel_indikator').html(response.html_tabel);
+                console.log(response.html_tabel);
+                $('#tabel-b1').html(response.html_tabel);
+                $('#convert').click(function(){
+                    var table_content = '<table>';
+                    table_content += $('#tabel_indikator').html();
+                    table_content += '</table>';
+                    $('#file_content').val(table_content);
+                    $('#convert_form').submit();
+                });
 
                 htmlmap = '';
                 htmlmap +="<div class='map-overlay' id='features'><div><p id='pd'><i>sorot kursor pada daerah</i></p></div></div>";

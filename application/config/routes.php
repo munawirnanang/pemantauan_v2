@@ -64,6 +64,7 @@ $route['hapus_indikator'] = 'C_updateIndikator/hapus_indikator';
 $route['edit_indikator/(:num)'] = 'C_updateIndikator/edit_indikator/$1';
 $route['update_all_indikator'] = 'C_updateIndikator/update_all_data_makro';
 $route['update_data_indikator/(:num)'] = 'C_updateIndikator/update_data_makro/$1';
+$route['reset_data_indikator/(:num)'] = 'C_updateIndikator/reset_indikator/$1';
 
 $route['indikator'] = 'C_indikator/index';
 $route['show_data'] = 'C_indikator/show_data';
@@ -71,11 +72,16 @@ $route['show_data'] = 'C_indikator/show_data';
 $route['data_bps/(:num)'] = 'C_databps/index/$1';
 $route['data_kategori/(:num)'] = 'C_databps/data_kategori/$1';
 $route['detail_data'] = 'C_databps/detail_data';
+$route['export'] = 'C_databps/export';
 
 $route['fitur'] = 'C_fitur/index';
 $route['tambah_fitur'] = 'C_fitur/tambah_fitur';
 $route['hapus_fitur'] = 'C_fitur/hapus_fitur';
 $route['edit_fitur/(:num)'] = 'C_fitur/edit_fitur/$1';
+
+$route['sdgs'] = 'C_sdgs/index';
+$route['get_goal'] = 'C_sdgs/get_goal';
+$route['detail_sdgs'] = 'C_sdgs/detail_sdgs';
 
 $route['user'] = 'C_user/index';
 $route['tambah_user'] = 'C_user/tambah_user';
