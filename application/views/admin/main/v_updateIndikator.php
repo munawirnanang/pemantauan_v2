@@ -13,7 +13,7 @@
                     <div class="col-md-5">
                         <div class="grid-container pull-right">
                             <button type="button" class="btn btn-success waves-effect waves-light m-b-15 btn-refresh-all"><i class="fa fa-refresh"></i> Update Semua Indikator</button>
-                            <button type="button" class="btn btn-primary waves-effect waves-light m-b-15"  data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-user-plus"></i> Tambah Indikator</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light m-b-15"  data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-plus-square"></i> Tambah Indikator</button>
                         </div>
                     </div>
                 </div>
@@ -237,8 +237,8 @@
                                     <span class="label label-success">Total: <?= $u['jumlah_data'] ?></span>
                                 </td>
                                 <td>    
-                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-info m-b-5 undo-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-undo"></i></button>
-                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-success m-b-5 refresh-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-refresh"></i></button>
+                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-info m-b-5 undo-btn"  data-api="<?= $u['id'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-undo"></i></button>
+                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-success m-b-5 refresh-btn"  data-api="<?= $u['id'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-refresh"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-warning m-b-5 edit-btn" id="edit"  data-toggle="modal" data-constraint="<?= $constraint ?>" data-id="<?= $u['id']?>" data-api="<?= $u['id_api']?>" data-turvar="<?= $u['id_turvar']?>" data-group="<?= $u['group_id']?>" data-nama="<?= $u['nama_indikator']?>" data-tabel="<?= $u['nama_tabel']?>" data-jenis="<?= $u['jenis']?>" data-chart="<?= $u['chart']?>" data-link="<?= $u['link']?>" data-satuan="<?= $u['satuan']?>" data-urutan="<?= $u['urutan']?>" data-ppd="<?= $u['ppd']?>" data-deskripsi="<?= $u['deskripsi']?>" data-target="#modal-edit"><i class="fa fa-pencil-square-o"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-danger m-b-5" action="hapus_indikator" name="hapus" id="hapus" name="hapus" nama-hapus="<?= $u['nama_indikator']?>" id-hapus="<?= $u['id']?>"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -397,7 +397,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-info waves-effect waves-light" id="tambah">Edit</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light" id="edit">Edit</button>
                 </div>
             </div>
         </form>

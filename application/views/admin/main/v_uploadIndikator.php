@@ -13,13 +13,13 @@
                     <div class="col-md-5">
                         <div class="grid-container pull-right">
                             <!-- <button type="button" class="btn btn-success waves-effect waves-light m-b-15 btn-refresh-all"><i class="fa fa-refresh"></i> Update Semua Indikator</button> -->
-                            <button type="button" class="btn btn-primary waves-effect waves-light m-b-15"  data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-user-plus"></i> Tambah Indikator</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light m-b-15"  data-toggle="modal" data-target="#con-close-modal"><i class="fa fa-plus-square"></i> Tambah Indikator</button>
                         </div>
                     </div>
                 </div>
                 <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                     <div class="modal-dialog modal-lg">
-                        <form action="<?= base_url('tambah_indikator') ?>" method="POST">
+                        <form action="<?= base_url('tambah_indikator2') ?>" method="POST">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -32,24 +32,6 @@
                                                 <label for="id" class="control-label">ID</label>
                                                 <input type="text" class="form-control" id="id" name="id" placeholder="1">
                                                 <?= form_error('id', '<small class="text-danger pl-3">', '</small>') ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="id_bps" class="control-label">API ID</label>
-                                                <input type="text" class="form-control" id="id_bps" name="id_bps" placeholder="1" required>
-                                                <?= form_error('id_bps', '<small class="text-danger pl-3">', '</small>') ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="id_turvar" class="control-label">Turvar API ID</label>
-                                                <input type="text" class="form-control" id="id_turvar" name="id_turvar" placeholder="1" required>
-                                                <?= form_error('id_turvar', '<small class="text-danger pl-3">', '</small>') ?>
                                             </div>
                                         </div>
                                     </div>
@@ -168,15 +150,6 @@
                                 <center>ID</center>
                             </th>
                             <th>
-                                <center>BPS API ID</center>
-                            </th>
-                            <th>
-                                <center>Turvar API ID</center>
-                            </th>
-                            <!-- <th>
-                                <center>Group ID</center>
-                            </th> -->
-                            <th>
                                 <center>Nama Indikator</center>
                             </th>
                             <th>
@@ -188,21 +161,9 @@
                             <th>
                                 <center>Chart</center>
                             </th>
-                            <!-- <th>
-                                <center>Link</center>
-                            </th> -->
                             <th>
                                 <center>Satuan</center>
                             </th>
-                            <!-- <th>
-                                <center>Urutan</center>
-                            </th>
-                            <th>
-                                <center>PPD</center>
-                            </th>
-                            <th>
-                                <center>Deskripsi</center>
-                            </th> -->
                             <th>
                                 <center>Jumlah Data</center>
                             </th>
@@ -223,9 +184,7 @@
                             <tr>
                                 <!-- <td><?= $i ?></td> -->
                                 <td><?= $u['id'] ?></td>
-                                <td><?= $u['id_api'] ?></td>
-                                <td><?= $u['id_turvar'] ?></td>
-                                <td><?= $u['nama_indikator'] ?></td>
+                                <td><a href="<?= base_url('upload/').$u['id'] ?>"><?= $u['nama_indikator'] ?></a></td>
                                 <td><?= $u['nama_tabel'] ?></td>
                                 <td><?= $u['jenis'] ?></td>
                                 <td><?= $u['chart'] ?></td>
@@ -237,8 +196,7 @@
                                     <span class="label label-success">Total: <?= $u['jumlah_data'] ?></span>
                                 </td>
                                 <td>    
-                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-info m-b-5 undo-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-undo"></i></button>
-                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-success m-b-5 refresh-btn"  data-api="<?= $u['id_api'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-refresh"></i></button>
+                                    <button class="btn btn-icon btn-rounded waves-effect waves-light btn-info m-b-5 undo-btn"  data-api="<?= $u['id'] ?>" data-nama="<?= $u['nama_indikator']?>"><i class="fa fa-undo"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-warning m-b-5 edit-btn" id="edit"  data-toggle="modal" data-constraint="<?= $constraint ?>" data-id="<?= $u['id']?>" data-api="<?= $u['id_api']?>" data-turvar="<?= $u['id_turvar']?>" data-group="<?= $u['group_id']?>" data-nama="<?= $u['nama_indikator']?>" data-tabel="<?= $u['nama_tabel']?>" data-jenis="<?= $u['jenis']?>" data-chart="<?= $u['chart']?>" data-link="<?= $u['link']?>" data-satuan="<?= $u['satuan']?>" data-urutan="<?= $u['urutan']?>" data-ppd="<?= $u['ppd']?>" data-deskripsi="<?= $u['deskripsi']?>" data-target="#modal-edit"><i class="fa fa-pencil-square-o"></i></button>
                                     <button class="btn btn-icon btn-rounded waves-effect waves-light btn-danger m-b-5" action="hapus_indikator" name="hapus" id="hapus" name="hapus" nama-hapus="<?= $u['nama_indikator']?>" id-hapus="<?= $u['id']?>"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -277,24 +235,6 @@
                                 <input type="text" class="form-control" id="id_edit" name="id_edit" placeholder="1" >
                                 <div id="keterangan"></div>
                                 <?= form_error('id_edit', '<small class="text-danger pl-3">', '</small>') ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="id_bps" class="control-label">API ID</label>
-                                <input type="text" class="form-control" id="id_bps_edit" name="id_bps_edit" placeholder="1" required>
-                                <?= form_error('id_bps_edit', '<small class="text-danger pl-3">', '</small>') ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="id_turvar" class="control-label">Turvar API ID</label>
-                                <input type="text" class="form-control" id="id_turvar_edit" name="id_turvar_edit" placeholder="1" required>
-                                <?= form_error('id_turvar_edit', '<small class="text-danger pl-3">', '</small>') ?>
                             </div>
                         </div>
                     </div>

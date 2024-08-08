@@ -7,6 +7,7 @@
 
 <!-- jQuery  -->
 <script src="<?= base_url('assets') ?>/assets/js/jquery.min.js"></script>
+<script src="<?= base_url('assets') ?>/assets/js/jquery.validate.min.js"></script>
 <script src="<?= base_url('assets') ?>/assets/js/bootstrap.min.js"></script>
 <script src="<?= base_url('assets') ?>/assets/js/detect.js"></script>
 <script src="<?= base_url('assets') ?>/assets/js/fastclick.js"></script>
@@ -95,7 +96,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= base_url('assets') ?>/plugins/sweetalert2/dist/sweetalert2.js"></script>
 <!-- <script src="<?= base_url('assets') ?>/plugins/bootstrap-sweetalert/sweet-alert.min.js"></script> -->
-
+ 
+<script src="<?= base_url('assets') ?>/assets/js/js/universal.js"></script>
 <script src=<?= empty($js) ? '' : base_url($js) ?>></script>
 <script src=<?= empty($js2) ? '' : base_url($js2) ?>></script>
 <script src="<?= base_url() ?>/assets/assets/js/js/swal.js"></script>
@@ -152,7 +154,10 @@
         $('#datatable-keytable').DataTable({
             keys: true
         });
-        $('#datatable-responsive').DataTable();
+        $('#datatable-responsive').DataTable({
+            "order": [[2, 'desc']]
+        });
+
         $('#datatable-colvid').DataTable({
             "dom": 'C<"clear">lfrtip',
             "colVis": {

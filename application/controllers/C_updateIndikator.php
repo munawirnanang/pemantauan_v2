@@ -30,7 +30,7 @@ class C_updateIndikator extends CI_Controller
     
      public function index()
     {
-        $data['judul'] = 'Upload Indikator';
+        $data['judul'] = 'Update Indikator';
         $data['js']= 'assets/assets/js/js/updateindikator.js';
 
         $data['indikator'] = $this->db->query('SELECT I.*,COUNT(DISTINCT(NI.tahun)) AS jumlah_tahun, COUNT(DISTINCT(NI.wilayah)) AS jumlah_wilayah, COUNT(DISTINCT(NI.periode)) AS jumlah_periode, COUNT(NI.id) AS jumlah_data, min(NI.tahun) AS tahunawal, max(NI.tahun) AS tahunakhir FROM indikator I LEFT JOIN nilai_indikator NI ON I.id=NI.id_indikator WHERE I.bps="1" GROUP BY I.id')->result_array();
@@ -190,7 +190,7 @@ class C_updateIndikator extends CI_Controller
     public function update_data_makro($id)
     {
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
-        $id_indikator = $this->db->query("SELECT id,id_api,id_turvar FROM indikator i WHERE i.id_api=$id")->row_array();
+        $id_indikator = $this->db->query("SELECT id,id_api,id_turvar FROM indikator i WHERE i.id=$id")->row_array();
         
         $url = 'https://webapi.bps.go.id/v1/api/list/model/data/lang/ind/domain/0000/var/'.$id_indikator['id_api'].'/turvar/'.$id_indikator['id_turvar'].'/key/'.$keyapi;
             
@@ -274,15 +274,12 @@ class C_updateIndikator extends CI_Controller
     }
     public function reset_indikator($id)
     {
-        $id_indikator = $this->db->query("SELECT id FROM indikator i WHERE i.id_api=$id")->row_array();
-        
-        $id_indikator = $id_indikator['id'];
 
-        $data = $this->db->get_where('nilai_indikator',['id_indikator'=>$id_indikator])->result_array();
+        $data = $this->db->get_where('nilai_indikator',['id_indikator'=>$id])->result_array();
         $countdata = count($data);
         
         if($countdata){
-            $this->db->where('id_indikator',$id_indikator);
+            $this->db->where('id_indikator',$id);
             $this->db->delete('nilai_indikator');
         }
     }

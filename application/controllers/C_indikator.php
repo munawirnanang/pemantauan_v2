@@ -32,28 +32,87 @@ class C_indikator extends CI_Controller
         $data['wilayah'] = $this->db->get('wilayah')->result_array();
         $data['indikator'] = $this->db->get('indikator')->result_array();
         $data['tahun'] = $this->db->query('SELECT DISTINCT T.tahun FROM nilai_indikator T ORDER BY tahun DESC')->result_array();
-        $data['max_overview'] = $this->db->query("SELECT
-                                                    NI.wilayah,NI.tahun, NI.periode, NI.id_indikator,NI.nilai, NI.nasional,NI.satuan,I.jenis, I.nama_indikator,W.nama_wilayah
-                                                FROM nilai_indikator NI
-                                                JOIN indikator I ON NI.id_indikator = I.id
-                                                JOIN wilayah W ON NI.wilayah = W.id
-                                                JOIN (SELECT NI1.id_indikator, MAX(NI1.tahun) AS max_tahun, MAX(NI1.periode) AS max_periode FROM nilai_indikator NI1 WHERE NI1.versi = (SELECT MAX(versi) FROM nilai_indikator) AND NI1.wilayah = '9999'AND NI1.nilai IS NOT NULL AND NI1.nasional IS NOT NULL GROUP BY NI1.id_indikator) max_data ON NI.id_indikator = max_data.id_indikator AND NI.tahun = max_data.max_tahun AND NI.periode = (SELECT MAX(NI2.periode) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI.id_indikator AND NI2.tahun = max_data.max_tahun AND NI2.nilai IS NOT NULL AND NI2.nasional IS NOT NULL)
-                                                WHERE
-                                                    NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-                                                    AND NI.wilayah = '9999'
-                                                    AND NI.nilai IS NOT NULL
-                                                    AND NI.nasional IS NOT NULL")->result_array();
-        $data['min_overview'] = $this->db->query("SELECT
-                                                    NI.wilayah,NI.tahun, NI.periode, NI.id_indikator,NI.nilai, NI.nasional,NI.satuan,I.jenis, I.nama_indikator,W.nama_wilayah
-                                                FROM nilai_indikator NI
-                                                JOIN indikator I ON NI.id_indikator = I.id
-                                                JOIN wilayah W ON NI.wilayah = W.id
-                                                JOIN (SELECT NI1.id_indikator, MAX(NI1.tahun) - 1 AS max_tahun, MAX(NI1.periode) AS max_periode FROM nilai_indikator NI1 WHERE NI1.versi = (SELECT MAX(versi) FROM nilai_indikator) AND NI1.wilayah = '9999'AND NI1.nilai IS NOT NULL AND NI1.nasional IS NOT NULL GROUP BY NI1.id_indikator) max_data ON NI.id_indikator = max_data.id_indikator AND NI.tahun = max_data.max_tahun AND NI.periode = (SELECT MAX(NI2.periode) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI.id_indikator AND NI2.tahun = max_data.max_tahun AND NI2.nilai IS NOT NULL AND NI2.nasional IS NOT NULL)
-                                                WHERE
-                                                    NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-                                                    AND NI.wilayah = '9999'
-                                                    AND NI.nilai IS NOT NULL
-                                                    AND NI.nasional IS NOT NULL")->result_array();
+        $data['max_overview'] = $this->db->query("
+        SELECT
+            NI.wilayah,
+            NI.tahun,
+            NI.periode,
+            NI.id_indikator,
+            NI.nilai,
+            NI.nasional,
+            NI.satuan,
+            I.jenis,
+            I.nama_indikator,
+            W.nama_wilayah
+        FROM nilai_indikator NI
+        JOIN indikator I ON NI.id_indikator = I.id
+        JOIN wilayah W ON NI.wilayah = W.id
+        JOIN (
+            SELECT NI1.id_indikator, MAX(NI1.tahun) AS max_tahun, MAX(NI1.periode) AS max_periode
+            FROM nilai_indikator NI1
+            WHERE NI1.versi = (SELECT MAX(versi) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI1.id_indikator)
+            AND NI1.wilayah = '9999'
+            AND NI1.nilai IS NOT NULL
+            AND NI1.nasional IS NOT NULL
+            GROUP BY NI1.id_indikator
+        ) max_data ON NI.id_indikator = max_data.id_indikator
+                AND NI.tahun = max_data.max_tahun
+                AND NI.periode = (SELECT MAX(NI2.periode)
+                                    FROM nilai_indikator NI2
+                                    WHERE NI2.id_indikator = NI.id_indikator
+                                    AND NI2.tahun = max_data.max_tahun
+                                    AND NI2.nilai IS NOT NULL
+                                    AND NI2.nasional IS NOT NULL)
+        JOIN (
+            SELECT id_indikator, MAX(versi) AS max_versi
+            FROM nilai_indikator
+            GROUP BY id_indikator
+        ) max_versi_data ON NI.id_indikator = max_versi_data.id_indikator AND NI.versi = max_versi_data.max_versi
+        WHERE
+            NI.wilayah = '9999'
+            AND NI.nilai IS NOT NULL
+            AND NI.nasional IS NOT NULL")->result_array();
+            
+        $data['min_overview'] = $this->db->query("
+        SELECT
+            NI.wilayah,
+            NI.tahun,
+            NI.periode,
+            NI.id_indikator,
+            NI.nilai,
+            NI.nasional,
+            NI.satuan,
+            I.jenis,
+            I.nama_indikator,
+            W.nama_wilayah
+        FROM nilai_indikator NI
+        JOIN indikator I ON NI.id_indikator = I.id
+        JOIN wilayah W ON NI.wilayah = W.id
+        JOIN (
+            SELECT NI1.id_indikator, MAX(NI1.tahun) - 1 AS max_tahun, MAX(NI1.periode) AS max_periode
+            FROM nilai_indikator NI1
+            WHERE NI1.versi = (SELECT MAX(NI2.versi) FROM nilai_indikator NI2 WHERE NI2.id_indikator = NI1.id_indikator)
+            AND NI1.wilayah = '9999'
+            AND NI1.nilai IS NOT NULL
+            AND NI1.nasional IS NOT NULL
+            GROUP BY NI1.id_indikator
+        ) max_data ON NI.id_indikator = max_data.id_indikator
+                AND NI.tahun = max_data.max_tahun
+                AND NI.periode = (SELECT MAX(NI2.periode)
+                                    FROM nilai_indikator NI2
+                                    WHERE NI2.id_indikator = NI.id_indikator
+                                    AND NI2.tahun = max_data.max_tahun
+                                    AND NI2.nilai IS NOT NULL
+                                    AND NI2.nasional IS NOT NULL)
+        JOIN (
+            SELECT id_indikator, MAX(versi) AS max_versi
+            FROM nilai_indikator
+            GROUP BY id_indikator
+        ) max_versi_data ON NI.id_indikator = max_versi_data.id_indikator AND NI.versi = max_versi_data.max_versi
+        WHERE
+            NI.wilayah = '9999'
+            AND NI.nilai IS NOT NULL
+            AND NI.nasional IS NOT NULL")->result_array();
                                                 
         $combinedData = array_merge($data['max_overview'],$data['min_overview']);
         $combinedArray = [];
@@ -184,7 +243,7 @@ class C_indikator extends CI_Controller
                         FROM nilai_indikator NI 
                         JOIN indikator I ON NI.id_indikator=I.id
                         JOIN wilayah W ON NI.wilayah=W.id
-                        WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
+                        WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator WHERE nilai_indikator.id_indikator=$indikator[$i])
                         AND NI.id_indikator=$indikator[$i]
                         AND NI.wilayah='$wilayah[$w]'
                         AND NI.tahun='$tahun[$t]'")->result_array();    
@@ -231,16 +290,22 @@ class C_indikator extends CI_Controller
         
         
         if($wilayah[0]==='9999' && $wilayah[1]==='1000'){
-            $dataproperties = $this->db->query("SELECT NI.wilayah,NI.tahun,NI.periode,NI.id_indikator,NI.nilai,NI.nasional,NI.satuan, I.jenis,I.nama_indikator,W.nama_wilayah
-                            FROM nilai_indikator NI 
-                            JOIN indikator I ON NI.id_indikator=I.id
-                            JOIN wilayah W ON NI.wilayah=W.id
-                            WHERE NI.versi = (SELECT MAX(versi) FROM nilai_indikator)
-                            AND NI.wilayah LIKE '%00%'
-                            AND NI.id_indikator IN ($query_indikator)
-                            AND NI.tahun IN ($query_tahun)
-                            AND NI.nilai IS NOT NULL
-                            AND NI.nasional IS NOT NULL")->result_array();
+            $dataproperties = $this->db->query("
+            SELECT NI.wilayah, NI.tahun, NI.periode, NI.id_indikator, NI.nilai, NI.nasional, NI.satuan, I.jenis, I.nama_indikator, W.nama_wilayah
+            FROM nilai_indikator NI
+            JOIN indikator I ON NI.id_indikator = I.id
+            JOIN wilayah W ON NI.wilayah = W.id
+            JOIN (
+                SELECT id_indikator, MAX(versi) AS max_versi
+                FROM nilai_indikator
+                GROUP BY id_indikator
+            ) max_versions ON NI.id_indikator = max_versions.id_indikator AND NI.versi = max_versions.max_versi
+            WHERE NI.wilayah LIKE '%00%'
+            AND NI.id_indikator IN ($query_indikator)
+            AND NI.tahun IN ($query_tahun)
+            AND NI.nilai IS NOT NULL
+            AND NI.nasional IS NOT NULL
+        ")->result_array();
 
             foreach ($dataproperties as $item) {
                 $key = "properties_{$item['id_indikator']}_{$item['tahun']}";

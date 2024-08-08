@@ -53,10 +53,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $route['default_controller'] = 'C_auth/index';
 $route['login'] = 'C_auth/login';
 $route['logout'] = 'C_auth/logout';
+$route['forget_pass'] = 'C_auth/forget_pass';
+$route['forget'] = 'C_auth/forget';
 
 $route['beranda'] = 'C_beranda/index';
 
 $route['upload_indikator'] = 'C_uploadIndikator/index';
+$route['tambah_indikator2'] = 'C_uploadIndikator/tambah_indikator';
+$route['edit_indikator2/(:num)'] = 'C_uploadIndikator/edit_indikator/$1';
+$route['reset_data_indikator2/(:num)'] = 'C_uploadIndikator/reset_indikator/$1';
+$route['upload/(:num)'] = 'C_uploadIndikator/upload/$1';
+$route['export_template/(:num)'] = 'C_uploadIndikator/export_template/$1';
+$route['import'] = 'C_uploadIndikator/import';
+$route['input_upload'] = 'C_uploadIndikator/input_upload';
+$route['hapus_upload'] = 'C_uploadIndikator/hapus_upload';
+
 
 $route['update_indikator'] = 'C_updateIndikator/index';
 $route['tambah_indikator'] = 'C_updateIndikator/tambah_indikator';
@@ -74,25 +85,38 @@ $route['data_kategori/(:num)'] = 'C_databps/data_kategori/$1';
 $route['detail_data'] = 'C_databps/detail_data';
 $route['export'] = 'C_databps/export';
 
+$route['repositori_dokumen'] = 'C_repositori_dokumen/index';
+$route['show_doc'] = 'C_repositori_dokumen/show_doc';
+$route['count_doc_by_jenis'] = 'C_repositori_dokumen/count_doc_by_jenis';
+$route['zipDok'] = 'C_repositori_dokumen/zipDok';
+
 $route['fitur'] = 'C_fitur/index';
+$route['list_fitur'] = 'C_fitur/list_fitur';
 $route['tambah_fitur'] = 'C_fitur/tambah_fitur';
 $route['hapus_fitur'] = 'C_fitur/hapus_fitur';
 $route['edit_fitur/(:num)'] = 'C_fitur/edit_fitur/$1';
+$route['ubah_fitur'] = 'C_fitur/ubah_fitur';
 
 $route['sdgs'] = 'C_sdgs/index';
 $route['get_goal'] = 'C_sdgs/get_goal';
 $route['detail_sdgs'] = 'C_sdgs/detail_sdgs';
 
 $route['user'] = 'C_user/index';
+$route['list_user'] = 'C_user/list_user';
 $route['tambah_user'] = 'C_user/tambah_user';
 $route['hapus_user'] = 'C_user/hapus_user';
 $route['edit_user/(:num)'] = 'C_user/edit_user/$1';
+$route['ubah_user'] = 'C_user/ubah_user';
+$route['ubah_pass'] = 'C_user/ubah_pass';
+$route['get_user'] = 'C_user/get_user';
 
 $route['role'] = 'C_role/index';
+$route['list_role'] = 'C_role/list_role';
 $route['tambah_role'] = 'C_role/tambah_role';
 $route['update_role'] = 'C_role/update_role';
 $route['hapus_role'] = 'C_role/hapus_role';
 $route['edit_role/(:num)'] = 'C_role/edit_role/$1';
+$route['ubah_role'] = 'C_role/ubah_role';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
