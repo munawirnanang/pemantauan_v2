@@ -90,6 +90,9 @@
 <script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/annotations.js"></script>
 <script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/drilldown.js"></script>
 <script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/sunburst.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/exporting.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/data.js"></script>
+<script src="<?php echo base_url("assets"); ?>/assets/highcharts/modules/export-data.js"></script>
 
 
 <!-- init -->

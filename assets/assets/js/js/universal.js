@@ -4,7 +4,7 @@
 
 
 var base_url    = window.location.origin + '/';
-    base_url   += "WWW/pemantauan_arvin_v5/";
+    base_url   += "WWW/pemantauan_arvin_v8/";
 
     $(document).ready(function() {
 

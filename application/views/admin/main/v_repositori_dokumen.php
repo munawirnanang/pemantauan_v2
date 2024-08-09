@@ -1,7 +1,7 @@
 <!-- <div class="content-page" style="margin-top: 20px;"> -->
 <div class="content-page">
     <!-- Start content -->
-    <div class="content" style="margin-top: 50px;">
+    <div class="content">
         <div class="container" style="width: 93%;">
             <div class="row">
                 <!-- <h4 class="m-t-0 header-title"><b>Responsive example</b></h4>
@@ -33,6 +33,7 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="repositori-b1">
+                                    <!-- <div class="row" style="background-image: url('<?= base_url() ?>assets/images/innovation.jpg');"> -->
                                     <div class="row">
                                         <div class="col-sm-6 col-sm-offset-3">
                                             <ul class="nav nav-tabs tabs-bordered nav-justified">
@@ -61,7 +62,7 @@
                                                     </div>
                                                     <div class="row m-b-20">
                                                         <div class="col-12" style="text-align: center;">
-                                                            <a href="#" id="RPJMD" data-val="RPJMD" class="DokumRekom"><label class="fa fa-file"></label> RPJMD</a> | <a href="#" id="RKPD" data-val="RKPD" class="DokumRekom">RKPD</a> | <a href="#" id="inovasi" data-val="inovasi" class="DokumRekom">Inovasi</a> | <a href="#" id="APBD" data-val="APBD" class="DokumRekom">APBD</a>
+                                                            <a href="#" id="RPJMD" data-val="RPJMD" class="DokumRekom"><label class="fa fa-file-o"></label> RPJMD</a> | <a href="#" id="RKPD" data-val="RKPD" class="DokumRekom"><label class="fa fa-file-text-o"></label> RKPD</a> | <a href="#" id="inovasi" data-val="inovasi" class="DokumRekom"><label class="fa fa-info"></label> Inovasi</a> | <a href="#" id="APBD" data-val="APBD" class="DokumRekom"><label class="fa fa-file-excel-o"></label> APBD</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -151,10 +152,41 @@
                                 </div>
                                 <div class="tab-pane" id="grafik-b1">
 
-                                    <figure class="highcharts-figure">
-                                        <div id="container"></div>
-                                    </figure>
 
+                                    <div class="col-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <ul class="nav nav-pills m-b-30 pull-right">
+                                                    <li class="active">
+                                                        <a href="#navpills-1" data-toggle="tab" aria-expanded="true">Pie Chart</a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="#navpills-2" data-toggle="tab" aria-expanded="false">Drilldown Column Chart</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content br-n pn">
+                                                    <div id="navpills-1" class="tab-pane active">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <figure class="highcharts-figure">
+                                                                    <div id="container"></div>
+                                                                </figure>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="navpills-2" class="tab-pane">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <figure class="highcharts-figure">
+                                                                    <div id="container-2"></div>
+                                                                </figure>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                 </div>

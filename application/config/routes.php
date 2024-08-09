@@ -79,7 +79,11 @@ $route['export'] = 'C_databps/export';
 $route['repositori_dokumen'] = 'C_repositori_dokumen/index';
 $route['show_doc'] = 'C_repositori_dokumen/show_doc';
 $route['count_doc_by_jenis'] = 'C_repositori_dokumen/count_doc_by_jenis';
+$route['count_doc_by_wilayah'] = 'C_repositori_dokumen/count_doc_by_wilayah';
 $route['zipDok'] = 'C_repositori_dokumen/zipDok';
+
+$route['innovation_hub'] = 'C_innovation_hub/index';
+$route['show_innovation_doc'] = 'C_innovation_hub/show_innovation_doc';
 
 $route['fitur'] = 'C_fitur/index';
 $route['list_fitur'] = 'C_fitur/list_fitur';
