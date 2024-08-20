@@ -100,12 +100,39 @@ class C_updateIndikator extends CI_Controller
     public function test()
     {
         $keyapi = '954d935f47f5ee473f310c6410aa304e';
-        $url = 'https://webapi.bps.go.id/v1/api/view/domain/0000/model/statictable/lang/ind/id/1007/key/954d935f47f5ee473f310c6410aa304e';
+        $url = 'https://webapi.bps.go.id/v1/api/domain/type/all/key/954d935f47f5ee473f310c6410aa304e/';
         $this->curl->create($url);
         $this->curl->option(CURLOPT_TIMEOUT, 10); // Set timeout to 10 seconds
         $api = $this->curl->execute();
         $response = json_decode($api, true);
-        echo htmlspecialchars_decode($response['data']['table']);
+        $nama_wilayah ="";
+        
+        foreach($response['data'][1] as $r)
+        {
+            if(strpos($r['domain_url'], 'kab') !== false){
+                $nama_wilayah = "Kabupaten " . $r['domain_name'];
+            }elseif(strpos($r['domain_url'], 'kota') !== false){
+                $nama_wilayah = "Kota " . $r['domain_name'];
+            }elseif(strpos($r['domain_url'], 'provinsi') !== false){
+                $nama_wilayah = "Provinsi " . $r['domain_name'];
+            }else{
+                $nama_wilayah =  $r['domain_name'];
+            }
+
+            $data =[
+                "id" => $r['domain_id'],
+                "nama_wilayah" => $nama_wilayah
+            ];
+            $this->db->where('id',$r['domain_id']);
+            $query = $this->db->get('wilayah');
+
+            if($query->num_rows() > 0)
+            {
+                $this->db->where('id',$r['domain_id']);
+                $this->db->update('wilayah',$data);
+            }
+        }
+        echo 'sabi';
     }
     public function update_all_data_makro()
     {

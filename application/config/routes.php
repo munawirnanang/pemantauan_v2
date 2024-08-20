@@ -118,5 +118,9 @@ $route['hapus_role'] = 'C_role/hapus_role';
 $route['edit_role/(:num)'] = 'C_role/edit_role/$1';
 $route['ubah_role'] = 'C_role/ubah_role';
 
+$route['apbd'] = 'C_apbd/index';
+$route['overview'] = 'C_apbd/overview';
+$route['show_data_apbd'] = 'C_apbd/show_data_apbd';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

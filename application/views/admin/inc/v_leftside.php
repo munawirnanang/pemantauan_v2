@@ -87,6 +87,15 @@
                     } ?>
                 <?php } ?>
 
+                <?php foreach ($this->session->userdata("fitur") as $fitur) { ?>
+                    <?php if ($fitur == 'APBD') { ?>
+                        <li>
+                            <a href="<?= base_url('apbd'); ?>" class="waves-effect"><i class="fa fa-money"></i><span> APBD </span></a>
+                        </li>
+                    <?php break;
+                    } ?>
+                <?php } ?>
+
 
                 <?php foreach ($this->session->userdata("fitur") as $fitur) { ?>
                     <?php if (($fitur == 'Upload Data Indikator') || ($fitur == 'Upload Data APBD') || ($fitur == 'Fitur') || ($fitur == 'Role') || ($fitur == 'User')) { ?>
